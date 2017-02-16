@@ -10,6 +10,13 @@ import GoogleLogin from 'react-google-login';
 
 const responseGoogle = (response) => {
   console.log(response);
+  
+  var msg = response.w3['ig'];
+  //emits the messag eto the socket
+     console.log('New user: ', msg);
+        Socket.emit('new user', {
+            'user': msg,
+        });
 }
 
 
