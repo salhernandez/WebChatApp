@@ -16,11 +16,11 @@ export class MessageForm extends React.Component {
   }
 
   handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.value);
+    //alert('A name was submitted: ' + this.state.value);
     event.preventDefault();
     var msg = this.state.value
     
-    //emits the messag eto the socket
+    //emits the message to the socket
      console.log('New message: ', msg);
         Socket.emit('new message', {
             'message': msg,

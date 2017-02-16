@@ -21,18 +21,28 @@
         /*global user*/
             function onSignIn(googleUser) {
                 console.log('Google Auth Response', googleUser);
-                alert ("Welcome, " + googleUser.w3['ig']);
+                //alert ("Welcome, " + googleUser.w3['ig']);
+                
+                //displays the current user on the screen
+                document.getElementById("userName").innerHTML=googleUser.w3['ig'];
+                  
             var user = googleUser.w3['ig'];
             //loginSuccessFul(user);
   // We need to register an Observer on Firebase Auth to make sure auth is initialized.
             var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
                 unsubscribe();
+                
             // Check if we are already signed-in Firebase with the correct user.
             if (!isUserEqual(googleUser, firebaseUser)) {
                 // Build Firebase credential with the Google ID token.
                 var credential = firebase.auth.GoogleAuthProvider.credential(
                 googleUser.getAuthResponse().id_token);
                   console.log("User" + googleUser + " Has logged in");
+                  //displays the current user on the screen
+                document.getElementById("userName").innerHTML=googleUser.w3['ig'];
+                //loginSuccessFul(user);
+                  
+                  
             // Sign in with credential from the Google user.
             firebase.auth().signInWithCredential(credential).catch(function(error) {
                 // Handle Errors here.
@@ -51,7 +61,8 @@
   
   //this is the redirect
    function loginSuccessFul(name){
-        window.location.replace("/chat.html?user="+ name);
+        //window.location.replace("/chat.html?user="+ name);
+        window.location.replace("?user="+ name);
     }
 }
 </script>
@@ -120,6 +131,10 @@ FB.getLoginStatus(function(response) {
         <div id="content"></div>
         <div id ="chatForm"></div>
         <div id ="userForm"></div>
+        <div id ="userName"></div>
+        <div id ="loginGoogle"></div>
+        <div id ="googleButton"></div>
+        
         <script type="text/javascript" src="/static/script.js"></script>
     </body>
     

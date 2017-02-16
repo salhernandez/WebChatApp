@@ -6,6 +6,14 @@ import { UserForm } from './UserForm';
 
 import { Content } from './Content';
 
+import GoogleLogin from 'react-google-login';
+
+const responseGoogle = (response) => {
+  console.log(response);
+}
+
+
+
 Socket.on('connect', function() {
  console.log('Connecting to the server!');
 })
@@ -23,4 +31,14 @@ ReactDOM.render(
 ReactDOM.render(
     <UserForm />, 
     document.getElementById('userForm')
+);
+
+ReactDOM.render(
+  <GoogleLogin
+    clientId="192807312085-9jk4t8hnf02gcb6bekmsu73h5td0reap.apps.googleusercontent.com"
+    buttonText="Login"
+    onSuccess={responseGoogle}
+    onFailure={responseGoogle}
+  />,
+  document.getElementById('googleButton')
 );

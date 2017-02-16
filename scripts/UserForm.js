@@ -16,7 +16,7 @@ export class UserForm extends React.Component {
   }
 
   handleSubmit(event) {
-    alert('A user was submitted: ' + this.state.value);
+    //alert('A user was submitted: ' + this.state.value);
     event.preventDefault();
     var msg = this.state.value
     

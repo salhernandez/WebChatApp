@@ -6,6 +6,7 @@
     "babel-preset-react": "^6.22.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
+    "react-google-login-component": "^0.5.2",
     "socket.io-client": "^1.7.2"
   },
   "devDependencies": {}
