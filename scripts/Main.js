@@ -3,19 +3,42 @@ import * as ReactDOM from 'react-dom';
 import { Socket } from './Socket';
 import { MessageForm } from './MessageForm';
 import { UserForm } from './UserForm';
-
 import { Content } from './Content';
 
 import GoogleLogin from 'react-google-login';
+import FacebookLogin from 'react-facebook-login';
+ 
+const responseFacebook = (response) => {
+  console.log(response);
+  
+  var userName = response.name;
+  var userPic = response.picture.data.url
+  
+  console.log(userName);
+  console.log(userPic);
+  
+  //emits the messag eto the socket
+     console.log('New user: ', userName);
+        Socket.emit('new user', {
+            'user': userName,
+            'source': "facebook",
+            'userPicture': userPic,
+        });
+        
+}
 
 const responseGoogle = (response) => {
   console.log(response);
   
-  var msg = response.w3['ig'];
+  var userName = response.w3['ig'];
+  var userPic = response.w3['Paa'];
+  
   //emits the messag eto the socket
-     console.log('New user: ', msg);
+     console.log('New user: ', userName);
         Socket.emit('new user', {
-            'user': msg,
+            'user': userName,
+            'source': "google",
+            'userPicture': userPic,
         });
 }
 
@@ -48,4 +71,14 @@ ReactDOM.render(
     onFailure={responseGoogle}
   />,
   document.getElementById('googleButton')
+);
+
+ReactDOM.render(
+  <FacebookLogin
+    appId="379287432464127"
+    autoLoad={true}
+    fields="name,email,picture"
+    //onClick={componentClicked}
+    callback={responseFacebook} />,
+  document.getElementById('facebookButton')
 );

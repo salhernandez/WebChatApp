@@ -27,6 +27,8 @@ def on_disconnect():
 all_numbers = []
 all_users = []
 all_messages = []
+all_sources = []
+all_userPictures = []
 
 @socketio.on('new number')
 def on_new_number(data):
@@ -55,15 +57,19 @@ def on_new_message(data):
 @socketio.on('new user')
 def on_new_user(data):
     print "Got an event for new user with data:", data
+    
     # TODO: Fill me out!
     all_users.append(data['user'])
-    
+    all_sources.append(data['source'])
+    all_userPictures.append(data['userPicture'])
     
     print request.sid #gets sid
     
     #emit new message
     socketio.emit('all users', {
-        'users': all_users
+        'users': all_users,
+        'sources' : all_sources,
+        'userPictures' : all_userPictures
     })
 
 

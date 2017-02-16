@@ -11,6 +11,8 @@ export class Content extends React.Component {
             'numbers': [],
             'users': [],
             'messages': [],
+            'sources': [],
+            'userPictures': [],
         };
     }
 
@@ -34,8 +36,18 @@ export class Content extends React.Component {
             this.setState({
                 'users': data['users']
             });
+            
+            this.setState({
+                'sources': data['sources']
+            });
+            
+            this.setState({
+                'userPictures': data['userPictures']
+            });
             console.log("got stuff from users");
         })
+        
+        
     }
 
     render() {
@@ -47,6 +59,14 @@ export class Content extends React.Component {
             (n, index) => <p key={index}>{n}</p>
         );
         
+        let theSources = this.state.sources.map(
+            (n, index) => <p key={index}>{n}</p>
+        );
+        
+        let theUserPictures = this.state.userPictures.map(
+            (n, index) => <img src={n} alt="boohoo" key={index}/>
+        );
+        
         return (
             <div>
                 <h1>Messages</h1>
@@ -54,6 +74,12 @@ export class Content extends React.Component {
                 
                 <h1>Users</h1>
                 {theUsers}
+                
+                <h1>Sources</h1>
+                {theSources}
+                
+                <h1>Images</h1>
+                {theUserPictures}
                 
                 {/*<Button />*/}
             </div>
