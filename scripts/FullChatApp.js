@@ -194,14 +194,16 @@ var ChatApp = React.createClass({
 
   _userLeft(data) {
       var {users, messages} = this.state;
-      var {name, userPicture} = data;
-      console.log(userPicture);
+      var {name} = data;
+      console.log("a user left");
+      
       var index = users.indexOf(name);
+      
       users.splice(index, 1);
       messages.push({
           user: 'APPLICATION BOT',
           text : name +' Left',
-          src : userPicture
+          src : ""
       });
       this.setState({users, messages});
   },

@@ -41,6 +41,12 @@ def on_disconnect():
     print request.sid #gets sid
     print 'Someone disconnected!'
     
+    socketio.emit('user:left', {
+            'name': "a user",
+        }, broadcast=True)
+    
+    
+    
 all_numbers = []
 all_users = []
 all_messages = []

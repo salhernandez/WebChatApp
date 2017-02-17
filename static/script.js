@@ -13469,16 +13469,17 @@ var ChatApp = React.createClass({
         var _state2 = this.state,
             users = _state2.users,
             messages = _state2.messages;
-        var name = data.name,
-            userPicture = data.userPicture;
+        var name = data.name;
 
-        console.log(userPicture);
+        console.log("a user left");
+
         var index = users.indexOf(name);
+
         users.splice(index, 1);
         messages.push({
             user: 'APPLICATION BOT',
             text: name + ' Left',
-            src: userPicture
+            src: ""
         });
         this.setState({ users: users, messages: messages });
     },
