@@ -2,9 +2,18 @@ import os
 import flask
 import flask_socketio
 from flask import request
+import flask_sqlalchemy
+#import models
 
 app = flask.Flask(__name__)
 socketio = flask_socketio.SocketIO(app)
+
+
+# URI scheme: postgresql://<username>:<password>@<hostname>:<port>/<database-name>
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://potato:potatosareawesome@localhost/postgres'
+#db = flask_sqlalchemy.SQLAlchemy(app)
+
+
 
 @app.route('/')
 def hello():
@@ -18,6 +27,8 @@ def hello():
 def on_connect():
     print request.sid #gets sid
     print 'Someone connected!'
+    
+    
 
 @socketio.on('disconnect')
 def on_disconnect():
@@ -30,6 +41,20 @@ all_messages = []
 all_sources = []
 all_userPictures = []
 
+#gets a new message from the client and broadcasts it
+@socketio.on('send:message:server')
+def on_server_message(data):
+    socketio.emit('send:message:client', data, broadcast=True)
+
+#gets the user that just joined and sends them to the client
+@socketio.on('server:user:join')
+def server_user_join(data):
+    print "a new person has joined ", data
+    socketio.emit('user:join', data, broadcast=True)
+    
+    
+    
+    
 @socketio.on('new number')
 def on_new_number(data):
     print "Got an event for new number with data:", data
@@ -45,7 +70,7 @@ def on_new_number(data):
 def on_new_message(data):
     print "Got an event for new message with data:", data
     # TODO: Fill me out!
-    all_messages.append(data['message'])
+    #all_messages.append(data['message'])
     
     
     print request.sid #gets sid
@@ -53,6 +78,7 @@ def on_new_message(data):
     socketio.emit('all messages', {
         'messages': all_messages
     })
+
 
 @socketio.on('new user')
 def on_new_user(data):
@@ -70,6 +96,11 @@ def on_new_user(data):
         'users': all_users,
         'sources' : all_sources,
         'userPictures' : all_userPictures
+    })
+    
+    socketio.emit('init', {
+        'users' : all_users,
+        'name': data['user'],
     })
 
 
