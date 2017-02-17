@@ -2,7 +2,7 @@ import os
 import flask
 import flask_socketio
 from flask import request
-#import flask_sqlalchemy
+import flask_sqlalchemy
 #import models
 
 app = flask.Flask(__name__)
@@ -29,12 +29,6 @@ def on_connect():
     print 'Someone connected!'
     
     
-    socketio.emit('init', {
-            'users' : all_users,
-            'name': "muahahah",
-        })
-    
-    
 
 @socketio.on('disconnect')
 def on_disconnect():
@@ -50,13 +44,18 @@ all_userPictures = []
 #gets a new message from the client and broadcasts it
 @socketio.on('send:message:server')
 def on_server_message(data):
-    socketio.emit('send:message:client', data, broadcast=True, include_self=False)
+    socketio.emit('send:message:client', data, broadcast=True)
 
 #gets the user that just joined and sends them to the client
 @socketio.on('server:user:join')
 def server_user_join(data):
     print "a new person has joined ", data
-    socketio.emit('user:join', data, broadcast=True)
+    socketio.emit('user:join', data, broadcast=True, s)
+
+socketio.emit('init', {
+        'users' : all_users,
+        'name': data['user'],
+    })
 
     
 """    

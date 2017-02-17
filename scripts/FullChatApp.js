@@ -6,6 +6,8 @@ var UsersList = React.createClass({
   render() {
       return (
           <div className='users'>
+            
+            
               <h3> Online Users </h3>
               <ul>
                   {
@@ -17,7 +19,19 @@ var UsersList = React.createClass({
                           );
                       })
                   }
-              </ul>                
+              </ul>         
+              
+              <ul>
+                  {
+                      this.props.pictures.map((pic, i) => {
+                          return (
+                              <img src={pic} alt="userPic" key={i} />
+                          );
+                      })
+                  }
+              </ul>
+              
+              
           </div>
       );
   }
@@ -28,7 +42,7 @@ var Message = React.createClass({
       return (
           <div className="message">
               <strong>{this.props.user} :</strong> 
-              <span>{this.props.text}</span>        
+              <span>{this.props.text}</span>
           </div>
       );
   }
@@ -46,6 +60,7 @@ var MessageList = React.createClass({
                               key={i}
                               user={message.user}
                               text={message.text}
+                              //src={message.src}
                           />
                       );
                   })
@@ -126,7 +141,7 @@ var ChangeNameForm = React.createClass({
 var ChatApp = React.createClass({
 
   getInitialState() {
-      return {users: [], messages:[], text: ''};
+      return {users: [], messages:[], text: '', pictures:[]};
   },
 
   componentDidMount() {
@@ -150,34 +165,43 @@ var ChatApp = React.createClass({
       var {messages} = this.state;
       messages.push(message);
       
+      console.log("the message received "+message.user + message.text);
       this.setState({messages});
   },
 
   _userJoined(data) {
       console.log("someone joined with "+data.user)
-      var {users, messages} = this.state;
+      var {users, messages, pictures} = this.state;
       
       //will grab the key from the data as the data itself :D
-      var {user} = data;
-      
+      var {user, userPicture} = data;
+      console.log("joined "+userPicture);
       
       console.log(user);
       users.push(user);
+      
+      pictures.push(userPicture);
+      
+      
       messages.push({
           user: 'APPLICATION BOT',
-          text : user +' Joined'
+          text : user +' Joined',
+          src: userPicture
       });
-      this.setState({users, messages});
+      
+      this.setState({users, messages, pictures});
   },
 
   _userLeft(data) {
       var {users, messages} = this.state;
-      var {name} = data;
+      var {name, userPicture} = data;
+      console.log(userPicture);
       var index = users.indexOf(name);
       users.splice(index, 1);
       messages.push({
           user: 'APPLICATION BOT',
-          text : name +' Left'
+          text : name +' Left',
+          src : userPicture
       });
       this.setState({users, messages});
   },
@@ -223,6 +247,7 @@ var ChatApp = React.createClass({
           <div>
               <UsersList
                   users={this.state.users}
+                  pictures={this.state.pictures}
               />
               <MessageList
                   messages={this.state.messages}

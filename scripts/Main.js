@@ -28,6 +28,7 @@ const responseFacebook = (response) => {
             'source': "facebook",
             'userPicture': userPic,
         });
+        
         /*
         Socket.emit('new user', {
             'user': userName,

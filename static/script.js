@@ -13279,6 +13279,13 @@ var UsersList = React.createClass({
                         user
                     );
                 })
+            ),
+            React.createElement(
+                'ul',
+                null,
+                this.props.pictures.map(function (pic, i) {
+                    return React.createElement('img', { src: pic, alt: 'userPic', key: i });
+                })
             )
         );
     }
@@ -13321,6 +13328,7 @@ var MessageList = React.createClass({
                     key: i,
                     user: message.user,
                     text: message.text
+                    //src={message.src}
                 });
             })
         );
@@ -13403,7 +13411,7 @@ var ChangeNameForm = React.createClass({
 var ChatApp = React.createClass({
     displayName: 'ChatApp',
     getInitialState: function getInitialState() {
-        return { users: [], messages: [], text: '' };
+        return { users: [], messages: [], text: '', pictures: [] };
     },
     componentDidMount: function componentDidMount() {
         _Socket.Socket.on('init', this._initialize);
@@ -13427,38 +13435,50 @@ var ChatApp = React.createClass({
 
         messages.push(message);
 
+        console.log("the message received " + message.user + message.text);
         this.setState({ messages: messages });
     },
     _userJoined: function _userJoined(data) {
         console.log("someone joined with " + data.user);
         var _state = this.state,
             users = _state.users,
-            messages = _state.messages;
+            messages = _state.messages,
+            pictures = _state.pictures;
 
         //will grab the key from the data as the data itself :D
 
-        var user = data.user;
+        var user = data.user,
+            userPicture = data.userPicture;
 
+        console.log("joined " + userPicture);
 
         console.log(user);
         users.push(user);
+
+        pictures.push(userPicture);
+
         messages.push({
             user: 'APPLICATION BOT',
-            text: user + ' Joined'
+            text: user + ' Joined',
+            src: userPicture
         });
-        this.setState({ users: users, messages: messages });
+
+        this.setState({ users: users, messages: messages, pictures: pictures });
     },
     _userLeft: function _userLeft(data) {
         var _state2 = this.state,
             users = _state2.users,
             messages = _state2.messages;
-        var name = data.name;
+        var name = data.name,
+            userPicture = data.userPicture;
 
+        console.log(userPicture);
         var index = users.indexOf(name);
         users.splice(index, 1);
         messages.push({
             user: 'APPLICATION BOT',
-            text: name + ' Left'
+            text: name + ' Left',
+            src: userPicture
         });
         this.setState({ users: users, messages: messages });
     },
@@ -13508,7 +13528,8 @@ var ChatApp = React.createClass({
             'div',
             null,
             React.createElement(UsersList, {
-                users: this.state.users
+                users: this.state.users,
+                pictures: this.state.pictures
             }),
             React.createElement(MessageList, {
                 messages: this.state.messages
@@ -30857,6 +30878,7 @@ var responseFacebook = function responseFacebook(response) {
         'source': "facebook",
         'userPicture': userPic
     });
+
     /*
     Socket.emit('new user', {
         'user': userName,
