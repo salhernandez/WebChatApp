@@ -74,11 +74,12 @@ def on_connect():
     print request.sid #gets sid
     print 'Someone connected!'
     
-    
+    """
     socketio.emit('init', {
             'users' : all_users,
             'name': "muahahah",
         })
+        """
     
     
 
@@ -106,6 +107,30 @@ def on_server_message(data):
     #train chatbot
     bot.train(data['text'])
 
+#gets the user that just joined and sends them to the client
+@socketio.on('local:user:login')
+def local_user_login(data):
+    print "local user login ", data
+    print data['user']
+    print data['src']
+    
+    all_users.append(data['user'])
+    
+    socketio.emit('init', {
+        'name': data['user'],
+        'users' : all_users,
+        'src': data['src']
+    }, 
+    broadcast=False)
+    #socketio.emit('user:join', data, broadcast=True, include_self=False)
+
+    socketio.emit('user:join', {
+            'users' : all_users,
+            'name': data['user'],
+        })
+       
+    
+
 @socketio.on('send:message:self')
 def on_self_message(data):
     socketio.emit('send:message:client', data, broadcast=False, include_self=True)
@@ -114,13 +139,16 @@ def on_self_message(data):
 @socketio.on('server:user:join')
 def server_user_join(data):
     print "a new person has joined ", data
+    
+    all_users.append(data['user'])
+    
     socketio.emit('user:join', data, broadcast=True)
 
 #gets the user that just joined and sends them to the client
 @socketio.on('user:disconnect')
 def user_disconnect():
     print "a client left"
-    
+
 
 @socketio.on('chatbot:message')
 def on_chatbot(data):

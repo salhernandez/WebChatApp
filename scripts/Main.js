@@ -23,50 +23,26 @@ const responseFacebook = (response) => {
      console.log('New user: ', userName);
      
      //emits message to server to join again
-     Socket.emit('server:user:join', {
+     Socket.emit('local:user:login', {
             'user': userName,
             'source': "facebook",
-            'userPicture': userPic,
+            'src': userPic,
         });
-        
-        /*
-        Socket.emit('new user', {
-            'user': userName,
-            'source': "facebook",
-            'userPicture': userPic,
-        });
-        */
-        /*
-        Socket.emit('user:join', {
-            'user': userName,
-            'source': "facebook",
-            'userPicture': userPic,
-        });
-        */
-        
 }
 
 const responseGoogle = (response) => {
-  console.log(response);
+  console.log("FROM GOOGLE"+response);
   
   var userName = response.w3['ig'];
   var userPic = response.w3['Paa'];
   
   //emits the messag eto the socket
      console.log('New user: ', userName);
-    Socket.emit('server:user:join', {
+    Socket.emit('local:user:login', {
             'user': userName,
             'source': "google",
-            'userPicture': userPic,
+            'src': userPic,
         });
-        
-        /*
-        Socket.emit('new user', {
-            'user': userName,
-            'source': "google",
-            'userPicture': userPic,
-        });
-        */
 }
 
 

@@ -21,6 +21,7 @@ var UsersList = React.createClass({
                   }
               </ul>         
               
+              {/*
               <ul>
                   {
                       this.props.pictures.map((pic, i) => {
@@ -30,6 +31,7 @@ var UsersList = React.createClass({
                       })
                   }
               </ul>
+              */}
               
               
           </div>
@@ -41,6 +43,7 @@ var Message = React.createClass({
   render() {
       return (
           <div className="message">
+              <img src={this.props.src} alt="userPic" width = "100px" height = "100px" />
               <strong>{this.props.user} :</strong> 
               <span>{this.props.text}</span>
           </div>
@@ -60,7 +63,7 @@ var MessageList = React.createClass({
                               key={i}
                               user={message.user}
                               text={message.text}
-                              //src={message.src}
+                              src={message.src}
                           />
                       );
                   })
@@ -82,8 +85,11 @@ var MessageForm = React.createClass({
       e.preventDefault();
       var message = {
           user : this.props.user,
-          text : this.state.text
+          text : this.state.text,
+          src: this.props.clientPic
       }
+      
+      console.log("FROM MESSAGE FORM"+this.state.clientPic);
       this.props.onMessageSubmit(message); 
       this.setState({ text: '' });
   },
@@ -141,7 +147,13 @@ var ChangeNameForm = React.createClass({
 var ChatApp = React.createClass({
 
   getInitialState() {
-      return {users: [], messages:[], text: '', pictures:[]};
+      return {users: [], 
+      messages:[], 
+      text: '', 
+      pictures:[],
+      botPic : '/static/chappie2.jpeg',
+      clientPic: ''
+      };
   },
 
   componentDidMount() {
@@ -157,8 +169,11 @@ var ChatApp = React.createClass({
   },
 
   _initialize(data) {
-      var {users, name} = data;
-      this.setState({users, user: name});
+      var {users, name, src} = data;
+      
+      console.log("init   "+src);
+      this.setState({users, user: name, clientPic: src});
+      console.log("current status pic"+this.state.clientPic);
   },
 
   _messageRecieve(message) {
@@ -166,34 +181,41 @@ var ChatApp = React.createClass({
       messages.push(message);
       
       console.log("the message received "+message.user + message.text);
+      
+      //check if the message was sent by RONBOT
+      if(message.user.includes("RONBOT")){
+        console.log("ITS RONBOT!!");
+        message.src = this.state.botPic;
+      }
+      
       this.setState({messages});
   },
 
   _userJoined(data) {
-      console.log("someone joined with "+data.user)
-      var {users, messages, pictures} = this.state;
+      console.log("someone joined with rawr");
+      var {users, messages, pictures, botPic} = this.state;
       
       //will grab the key from the data as the data itself :D
-      var {user, userPicture} = data;
-      console.log("joined "+userPicture);
+      var {name, src} = data;
+      console.log("joined "+name);
       
-      console.log(user);
-      users.push(user);
+      console.log(name);
+      users.push(name);
       
-      pictures.push(userPicture);
+      pictures.push(src);
       
       
       messages.push({
           user: 'RONBOT',
-          text : user +' Joined',
-          src: userPicture
+          text : name +' Joined',
+          src: botPic
       });
       
       this.setState({users, messages, pictures});
   },
 
   _userLeft(data) {
-      var {users, messages} = this.state;
+      var {users, messages, botPic} = this.state;
       var {name} = data;
       console.log("a user left");
       
@@ -203,7 +225,7 @@ var ChatApp = React.createClass({
       messages.push({
           user: 'RONBOT',
           text : name +' Left',
-          src : ""
+          src : botPic
       });
       this.setState({users, messages});
   },
@@ -274,6 +296,7 @@ var ChatApp = React.createClass({
               <MessageForm
                   onMessageSubmit={this.handleMessageSubmit}
                   user={this.state.user}
+                  clientPic = {this.state.clientPic}
               />
               
               {/*
