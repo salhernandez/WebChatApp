@@ -184,7 +184,7 @@ var ChatApp = React.createClass({
       
       
       messages.push({
-          user: 'APPLICATION BOT',
+          user: 'RONBOT',
           text : user +' Joined',
           src: userPicture
       });
@@ -201,7 +201,7 @@ var ChatApp = React.createClass({
       
       users.splice(index, 1);
       messages.push({
-          user: 'APPLICATION BOT',
+          user: 'RONBOT',
           text : name +' Left',
           src : ""
       });
@@ -214,7 +214,7 @@ var ChatApp = React.createClass({
       var index = users.indexOf(oldName);
       users.splice(index, 1, newName);
       messages.push({
-          user: 'APPLICATION BOT',
+          user: 'RONBOT',
           text : 'Change Name : ' + oldName + ' ==> '+ newName
       });
       this.setState({users, messages});
@@ -222,13 +222,30 @@ var ChatApp = React.createClass({
 
   handleMessageSubmit(message) {
       var {messages} = this.state;
-      messages.push(message);
-      this.setState({messages});
-      //Socket.emit('send:message', message);
-      Socket.emit('send:message:server', message);
       
-      //emits the message to the socket
-     console.log('New user: ', message);
+      //var res = message.text.substring(0, 3);
+      //determine if the message is for the chatbot or everyone else
+      if( message.text.includes("!!")){
+        console.log("chatbot about initiated");
+        
+        
+        Socket.emit('send:message:self', message);
+        
+        Socket.emit('chatbot:message', message.text);
+      }
+      
+      else{
+        
+        
+        messages.push(message);
+        this.setState({messages});
+        //Socket.emit('send:message', message);
+        
+        //emits the message to the socket
+        console.log('New message: ', message);
+        
+        Socket.emit('send:message:server', message);
+      }
   },
 
   handleChangeName(newName) {

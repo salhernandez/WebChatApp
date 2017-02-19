@@ -1,2 +1,5 @@
 Flask
 flask_socketio
+chatterbot
+geopy
+python-forecastio

@@ -13458,7 +13458,7 @@ var ChatApp = React.createClass({
         pictures.push(userPicture);
 
         messages.push({
-            user: 'APPLICATION BOT',
+            user: 'RONBOT',
             text: user + ' Joined',
             src: userPicture
         });
@@ -13477,7 +13477,7 @@ var ChatApp = React.createClass({
 
         users.splice(index, 1);
         messages.push({
-            user: 'APPLICATION BOT',
+            user: 'RONBOT',
             text: name + ' Left',
             src: ""
         });
@@ -13493,7 +13493,7 @@ var ChatApp = React.createClass({
         var index = users.indexOf(oldName);
         users.splice(index, 1, newName);
         messages.push({
-            user: 'APPLICATION BOT',
+            user: 'RONBOT',
             text: 'Change Name : ' + oldName + ' ==> ' + newName
         });
         this.setState({ users: users, messages: messages });
@@ -13501,13 +13501,26 @@ var ChatApp = React.createClass({
     handleMessageSubmit: function handleMessageSubmit(message) {
         var messages = this.state.messages;
 
-        messages.push(message);
-        this.setState({ messages: messages });
-        //Socket.emit('send:message', message);
-        _Socket.Socket.emit('send:message:server', message);
+        //var res = message.text.substring(0, 3);
+        //determine if the message is for the chatbot or everyone else
 
-        //emits the message to the socket
-        console.log('New user: ', message);
+        if (message.text.includes("!!")) {
+            console.log("chatbot about initiated");
+
+            _Socket.Socket.emit('send:message:self', message);
+
+            _Socket.Socket.emit('chatbot:message', message.text);
+        } else {
+
+            messages.push(message);
+            this.setState({ messages: messages });
+            //Socket.emit('send:message', message);
+
+            //emits the message to the socket
+            console.log('New message: ', message);
+
+            _Socket.Socket.emit('send:message:server', message);
+        }
     },
     handleChangeName: function handleChangeName(newName) {
         var _this = this;
@@ -30925,6 +30938,7 @@ _Socket.Socket.on('connect', function () {
 
 _Socket.Socket.on('disconnect', function () {
     console.log('bye!');
+    _Socket.Socket.emit('user:disconnect');
 });
 
 /*

@@ -77,6 +77,7 @@ Socket.on('connect', function() {
 
 Socket.on('disconnect', function() {
  console.log('bye!');
+ Socket.emit('user:disconnect');
 })
 
 /*
