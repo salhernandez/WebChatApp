@@ -53,6 +53,7 @@ var Message = React.createClass({
 
 var MessageList = React.createClass({
   render() {
+    
       return (
           <div className='messages'>
               <h2> Conversation: </h2>
@@ -192,7 +193,7 @@ var ChatApp = React.createClass({
   },
 
   _userJoined(data) {
-      console.log("someone joined with rawr");
+      console.log("someone joined");
       var {users, messages, pictures, botPic} = this.state;
       
       //will grab the key from the data as the data itself :D

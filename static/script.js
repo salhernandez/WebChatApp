@@ -13309,6 +13309,7 @@ var Message = React.createClass({
 var MessageList = React.createClass({
     displayName: 'MessageList',
     render: function render() {
+
         return React.createElement(
             'div',
             { className: 'messages' },
@@ -13453,7 +13454,7 @@ var ChatApp = React.createClass({
         this.setState({ messages: messages });
     },
     _userJoined: function _userJoined(data) {
-        console.log("someone joined with rawr");
+        console.log("someone joined");
         var _state = this.state,
             users = _state.users,
             messages = _state.messages,
