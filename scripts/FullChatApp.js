@@ -6,25 +6,27 @@ var UsersList = React.createClass({
   render() {
     var title = {
         backgroundColor: "black",
-        color: "white"
+        color: "white",
+        fontSize: "1.3em"
       };
+    var messageStyle={
+      fontSize: "1.1em"
+    };
       return (
           <div className='users'>
             
             
-              <h3 style={title}> Online Users </h3>
-              
+              <h3 style={title}> Online Users: {this.props.users.length}  
+              </h3>
                   {
                       this.props.users.map((user, i) => {
                           return (
-                              <p key={i}>
+                              <p key={i} style={messageStyle}>
                                   {user}
                               </p>
                           );
                       })
                   }
-              
-              
               {/*
               <ul>
                   {
@@ -56,14 +58,31 @@ var Message = React.createClass({
 });
 
 var MessageList = React.createClass({
+  
+  componentDidUpdate: function(){
+       var ReactDOM = require('react-dom');
+       var node = ReactDOM.findDOMNode(this);
+       node.scrollTop = node.scrollHeight;
+   }, 
   render() {
+    
+    var container = {
+        overflowY: "scroll",
+        height: "800px"
+    }
     var title = {
         backgroundColor: "black",
-        color: "white"
+        color: "white",
+        fontSize: "1.3em"
       };
+      
+      var messageStyle={
+      fontSize: "1.1em"
+    };
       return (
           <div className='messages'>
               <h2 style = {title}> Conversation: </h2>
+              <div style={container}>
               {
                   this.props.messages.map((message, i) => {
                       return (
@@ -76,6 +95,7 @@ var MessageList = React.createClass({
                       );
                   })
               }
+              </div>
           </div>
       );
   }
@@ -109,12 +129,14 @@ var MessageForm = React.createClass({
   render() {
     var title = {
         backgroundColor: "black",
-        color: "white"
+        color: "white",
+        fontSize: "1.3em"
       };
       return(
           <div className='message_form'>
               <h3 style={title}>Write New Message</h3>
-              <form onSubmit={this.handleSubmit}>
+              <form onSubmit={this.handleSubmit} style= {title}>
+              chat:
                   <input
                       onChange={this.changeHandler}
                       value={this.state.text}
@@ -294,28 +316,41 @@ var ChatApp = React.createClass({
           this.setState({users, user: newName});
       });
   },
-
+  
   render() {
       var container = {
         backgroundColor: "blue",
-        width:"1000px",
+        width:"100em",
         color: "white"
       };
       
       var leftBox = {
         backgroundColor:"rgb(81,83,96)",
-        width:"300px",
+        width:"30em",
         float:"left",
         textAlign:"left",
-        opacity: "0.9"
+        opacity: "0.9",
+        
+        
+        overflowY: "scroll",
+        height: "900px"
       }
       
       var rightBox = {
         backgroundColor:"rgb(81,83,96)",
-        width:"700px",
+        width:"70em",
         float:"right",
         textAlign:"left",
-        opacity: "0.9"
+        opacity: "0.9",
+      }
+      
+      var form = {
+        backgroundColor:"rgb(81,83,96)",
+        width:"70em",
+        float:"right",
+        textAlign:"left",
+        opacity: "0.9",
+        height: "100px"
       }
       return (
           <div style={container}>
@@ -331,7 +366,10 @@ var ChatApp = React.createClass({
                 <MessageList
                     messages={this.state.messages}
                 />
-                <MessageForm
+              </div>
+              
+              <div style={form}>
+              <MessageForm
                   onMessageSubmit={this.handleMessageSubmit}
                   user={this.state.user}
                   clientPic = {this.state.clientPic}

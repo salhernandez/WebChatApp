@@ -11,7 +11,7 @@ import FacebookLogin from 'react-facebook-login';
 
 
 const responseFacebook = (response) => {
-  console.log(response);
+  console.log("response from fb"+response);
   
   var userName = response.name;
   var userPic = response.picture.data.url
