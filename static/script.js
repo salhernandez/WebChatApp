@@ -31007,6 +31007,10 @@ var responseGoogle = function responseGoogle(response) {
   });
 };
 
+var failureGoogle = function failureGoogle(response) {
+  console.log("FROM GOOGLE FAILURE" + response);
+};
+
 _Socket.Socket.on('connect', function () {
   console.log('Connecting to the server!');
 });
@@ -31016,29 +31020,11 @@ _Socket.Socket.on('disconnect', function () {
   _Socket.Socket.emit('user:disconnect');
 });
 
-/*
-ReactDOM.render(
-    <Content />, 
-    document.getElementById('content')
-);
-
-ReactDOM.render(
-    <MessageForm />, 
-    document.getElementById('chatForm')
-);
-
-ReactDOM.render(
-    <UserForm />, 
-    document.getElementById('userForm')
-);
-
-*/
-
 ReactDOM.render(React.createElement(_reactGoogleLogin2.default, {
   clientId: '192807312085-9jk4t8hnf02gcb6bekmsu73h5td0reap.apps.googleusercontent.com',
   buttonText: 'Login with Google',
   onSuccess: responseGoogle,
-  onFailure: responseGoogle
+  onFailure: failureGoogle
 }), document.getElementById('googleButton'));
 
 ReactDOM.render(React.createElement(_reactFacebookLogin2.default, {

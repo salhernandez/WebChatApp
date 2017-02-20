@@ -3,9 +3,10 @@ import flask
 import flask_socketio
 from flask import request
 from chatterbot import ChatBot
-
 from geopy.geocoders import Nominatim
 import forecastio
+
+import flask_sqlalchemy
 
 
 geolocator = Nominatim()
@@ -13,15 +14,18 @@ geolocator = Nominatim()
 #darksky
 api_key = "6c48b0b26ed6bc18d09c8d6e62e10b27"
 
-#import flask_sqlalchemy
-#import models
-
 app = flask.Flask(__name__)
+
+
+import models
+
 socketio = flask_socketio.SocketIO(app)
 
 
 # URI scheme: postgresql://<username>:<password>@<hostname>:<port>/<database-name>
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://potato:potatosareawesome@localhost/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://potato:potatosareawesome@localhost/postgres'
+db = flask_sqlalchemy.SQLAlchemy(app)
+
 #db = flask_sqlalchemy.SQLAlchemy(app)
 
 
@@ -61,10 +65,26 @@ bot.train([
     'Im so humble'
 ])
 
+
+
 @app.route('/')
 def hello():
     #var_1 = flask.request.args.get('user', "not set")
     #var_2 = flask.request.args.get('var_2', "not set")
+    
+    
+    #querying for messages
+    recent = models.db.session.query(models.MessageTable).order_by(models.MessageTable.id.desc()).limit(100)
+    for row in recent.from_self().order_by(models.MessageTable.id):
+        print "FROM MESSAGE TABLE "+str(row.message)
+    #all_messages.append({'message':row.message,'name':row.name,'picture':row.picture})
+    
+    #querying for users
+    recent = models.db.session.query(models.UserTable).order_by(models.UserTable.id.desc()).limit(100)
+    for row in recent.from_self().order_by(models.UserTable.id):
+        print "FROM USER TABLE "+str(row.user) +" "+str(row.src) 
+    #all_messages.append({'message':row.message,'name':row.name,'picture':row.picture})
+    
     
     #print var_1
     return flask.render_template('index.html')
@@ -141,6 +161,7 @@ def server_user_join(data):
     print "a new person has joined ", data
     
     all_users.append(data['user'])
+    print str(data['src'])
     
     socketio.emit('user:join', data, broadcast=True)
 
@@ -300,10 +321,11 @@ def on_new_user(data):
     })
 """
 
-socketio.run(
-    app,
-    host=os.getenv('IP', '0.0.0.0'),
-    port=int(os.getenv('PORT', 8080)),
-    debug=True
-)
+if __name__ == '__main__': # __name__!
+    socketio.run(
+        app,
+        host=os.getenv('IP', '0.0.0.0'),
+        port=int(os.getenv('PORT', 8080)),
+        debug=True
+    )
 

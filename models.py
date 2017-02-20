@@ -1,15 +1,28 @@
 import flask_sqlalchemy, app
 
-
+#for heroku
+#app.app.config['SQLALCHEMY_DATABASE_URI'] = app.os.getenv('DATABASE_URL')
 app.app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://potato:potatosareawesome@localhost/postgres'
 db = flask_sqlalchemy.SQLAlchemy(app.app)
 
-class Message(db.Model):
+class MessageTable(db.Model):
     id = db.Column(db.Integer, primary_key=True) # key
-    text = db.Column(db.String(120))
+    message = db.Column(db.String(120))
     
     def __init__(self, t):
-        self.text = t
+        self.message = t
         
     def __repr__(self): # what's __repr__?
-        return '<Message text: %s>' % self.text
+        return '<MessageTable text: %s>' % self.message
+
+class UserTable(db.Model):
+    id = db.Column(db.Integer, primary_key=True) # key
+    user = db.Column(db.String(120))
+    src = db.Column(db.String(200))
+    
+    def __init__(self, t, u):
+        self.user = t
+        self.src = u
+        
+    def __repr__(self): # what's __repr__?
+        return '<UserTable text: %s %s>' % self.user % self.src

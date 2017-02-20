@@ -3,3 +3,5 @@ flask_socketio
 chatterbot
 geopy
 python-forecastio
+psycopg2
+Flask-SQLAlchemy

@@ -45,6 +45,11 @@ const responseGoogle = (response) => {
         });
 }
 
+const failureGoogle = (response) => {
+  console.log("FROM GOOGLE FAILURE"+response);
+  
+}
+
 
 
 Socket.on('connect', function() {
@@ -56,30 +61,12 @@ Socket.on('disconnect', function() {
  Socket.emit('user:disconnect');
 })
 
-/*
-ReactDOM.render(
-    <Content />, 
-    document.getElementById('content')
-);
-
-ReactDOM.render(
-    <MessageForm />, 
-    document.getElementById('chatForm')
-);
-
-ReactDOM.render(
-    <UserForm />, 
-    document.getElementById('userForm')
-);
-
-*/
-
 ReactDOM.render(
   <GoogleLogin
     clientId="192807312085-9jk4t8hnf02gcb6bekmsu73h5td0reap.apps.googleusercontent.com"
     buttonText="Login with Google"
     onSuccess={responseGoogle}
-    onFailure={responseGoogle}
+    onFailure={failureGoogle}
   />,
   document.getElementById('googleButton')
 );
