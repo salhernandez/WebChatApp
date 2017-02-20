@@ -68,7 +68,7 @@ var MessageList = React.createClass({
     
     var container = {
         overflowY: "scroll",
-        height: "800px"
+        height: "740px"
     }
     var title = {
         backgroundColor: "black",
