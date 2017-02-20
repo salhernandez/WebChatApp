@@ -22,23 +22,24 @@
 
     </head>
     
-    <body>
-        <div id="status"></div>
+    <body style = background-image:url("{{ url_for('static', filename='media/techWallpaper.jpeg') }}")>
+        <div id="status" align></div>
 
-        
-         <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
-        
-        <div id="content"></div>
-        <div id ="chatForm"></div>
-        <div id ="userForm"></div>
-        <div id ="userName"></div>
-        <div id ="loginGoogle"></div>
-        <div id ="googleButton"></div>
-        <div id ="facebookButton"></div>
-        <div id ="chatApp"></div>
-        <div id ="anotherButto"></div>
-        
-        <script type="text/javascript" src="/static/script.js"></script>
+        <center>
+            <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+            
+            <div id="content"></div>
+            <div id ="chatForm"></div>
+            <div id ="userForm"></div>
+            <div id ="userName"></div>
+            <div id ="loginGoogle"></div>
+            <div id ="googleButton"></div>
+            <div id ="facebookButton"></div>
+            <div id ="chatApp"></div>
+            <div id ="anotherButto"></div>
+            
+            <script type="text/javascript" src="/static/script.js"></script>
+        </center>
     </body>
     
 </html>

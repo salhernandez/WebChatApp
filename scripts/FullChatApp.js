@@ -4,22 +4,26 @@ import { Socket } from './Socket';
 
 var UsersList = React.createClass({
   render() {
+    var title = {
+        backgroundColor: "black",
+        color: "white"
+      };
       return (
           <div className='users'>
             
             
-              <h3> Online Users </h3>
-              <ul>
+              <h3 style={title}> Online Users </h3>
+              
                   {
                       this.props.users.map((user, i) => {
                           return (
-                              <li key={i}>
+                              <p key={i}>
                                   {user}
-                              </li>
+                              </p>
                           );
                       })
                   }
-              </ul>         
+              
               
               {/*
               <ul>
@@ -53,10 +57,13 @@ var Message = React.createClass({
 
 var MessageList = React.createClass({
   render() {
-    
+    var title = {
+        backgroundColor: "black",
+        color: "white"
+      };
       return (
           <div className='messages'>
-              <h2> Conversation: </h2>
+              <h2 style = {title}> Conversation: </h2>
               {
                   this.props.messages.map((message, i) => {
                       return (
@@ -100,9 +107,13 @@ var MessageForm = React.createClass({
   },
 
   render() {
+    var title = {
+        backgroundColor: "black",
+        color: "white"
+      };
       return(
           <div className='message_form'>
-              <h3>Write New Message</h3>
+              <h3 style={title}>Write New Message</h3>
               <form onSubmit={this.handleSubmit}>
                   <input
                       onChange={this.changeHandler}
@@ -152,7 +163,7 @@ var ChatApp = React.createClass({
       messages:[], 
       text: '', 
       pictures:[],
-      botPic : '/static/chappie2.jpeg',
+      botPic : '/static/media/chappie2.jpeg',
       clientPic: ''
       };
   },
@@ -285,26 +296,47 @@ var ChatApp = React.createClass({
   },
 
   render() {
+      var container = {
+        backgroundColor: "blue",
+        width:"1000px",
+        color: "white"
+      };
+      
+      var leftBox = {
+        backgroundColor:"rgb(81,83,96)",
+        width:"300px",
+        float:"left",
+        textAlign:"left",
+        opacity: "0.9"
+      }
+      
+      var rightBox = {
+        backgroundColor:"rgb(81,83,96)",
+        width:"700px",
+        float:"right",
+        textAlign:"left",
+        opacity: "0.9"
+      }
       return (
-          <div>
-              <UsersList
-                  users={this.state.users}
-                  pictures={this.state.pictures}
-              />
-              <MessageList
-                  messages={this.state.messages}
-              />
-              <MessageForm
+          <div style={container}>
+              
+              <div style={leftBox}>
+                <UsersList
+                    users={this.state.users}
+                    pictures={this.state.pictures}
+                />
+              </div>
+              
+               <div style={rightBox}>
+                <MessageList
+                    messages={this.state.messages}
+                />
+                <MessageForm
                   onMessageSubmit={this.handleMessageSubmit}
                   user={this.state.user}
                   clientPic = {this.state.clientPic}
               />
-              
-              {/*
-              <ChangeNameForm
-                  onChangeName={this.handleChangeName}
-              />
-              */}
+              </div>
           </div>
       );
   }
