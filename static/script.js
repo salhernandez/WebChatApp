@@ -13337,15 +13337,10 @@ var MessageList = React.createClass({
         };
         return React.createElement(
             'div',
-            { className: 'messages' },
-            React.createElement(
-                'h2',
-                { style: title },
-                ' Conversation: '
-            ),
+            { className: 'messages', style: container },
             React.createElement(
                 'div',
-                { style: container },
+                null,
                 this.props.messages.map(function (message, i) {
                     return React.createElement(Message, {
                         key: i,
@@ -13623,6 +13618,12 @@ var ChatApp = React.createClass({
             opacity: "0.9",
             height: "100px"
         };
+
+        var title = {
+            backgroundColor: "black",
+            color: "white",
+            fontSize: "1.3em"
+        };
         return React.createElement(
             'div',
             { style: container },
@@ -13637,6 +13638,11 @@ var ChatApp = React.createClass({
             React.createElement(
                 'div',
                 { style: rightBox },
+                React.createElement(
+                    'h2',
+                    { style: title },
+                    ' Conversation: '
+                ),
                 React.createElement(MessageList, {
                     messages: this.state.messages
                 })

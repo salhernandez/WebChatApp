@@ -80,9 +80,9 @@ var MessageList = React.createClass({
       fontSize: "1.1em"
     };
       return (
-          <div className='messages'>
-              <h2 style = {title}> Conversation: </h2>
-              <div style={container}>
+          <div className='messages' style={container}>
+              {/*<h2 style = {title}> Conversation: </h2>*/}
+              <div >
               {
                   this.props.messages.map((message, i) => {
                       return (
@@ -352,6 +352,12 @@ var ChatApp = React.createClass({
         opacity: "0.9",
         height: "100px"
       }
+      
+      var title = {
+        backgroundColor: "black",
+        color: "white",
+        fontSize: "1.3em"
+      }
       return (
           <div style={container}>
               
@@ -363,6 +369,7 @@ var ChatApp = React.createClass({
               </div>
               
                <div style={rightBox}>
+               <h2 style = {title}> Conversation: </h2>
                 <MessageList
                     messages={this.state.messages}
                 />
