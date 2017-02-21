@@ -36,6 +36,9 @@ const responseGoogle = (response) => {
   var userName = response.w3['ig'];
   var userPic = response.w3['Paa'];
   
+  console.log("FROM GOOGLE: "+userName);
+  console.log("FROM GOOGLE: "+userPic);
+  
   //emits the messag eto the socket
      console.log('New user: ', userName);
     Socket.emit('local:user:login', {
