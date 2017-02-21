@@ -5,10 +5,9 @@ from flask import request
 from chatterbot import ChatBot
 from geopy.geocoders import Nominatim
 import forecastio
-
 import flask_sqlalchemy
 
-
+#to get lat and long
 geolocator = Nominatim()
 
 #darksky
@@ -16,15 +15,15 @@ api_key = "6c48b0b26ed6bc18d09c8d6e62e10b27"
 
 app = flask.Flask(__name__)
 
-
+# for database
 import models
 
 socketio = flask_socketio.SocketIO(app)
 
 
 # URI scheme: postgresql://<username>:<password>@<hostname>:<port>/<database-name>
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://potato:potatosareawesome@localhost/postgres'
-db = flask_sqlalchemy.SQLAlchemy(app)
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://potato:potatosareawesome@localhost/postgres'
+#db = flask_sqlalchemy.SQLAlchemy(app)
 
 #db = flask_sqlalchemy.SQLAlchemy(app)
 
@@ -65,7 +64,10 @@ bot.train([
     'Im so humble'
 ])
 
-
+    
+#these lists will contain all the messages and people that are connected
+all_users = []
+all_messages = []
 
 @app.route('/')
 def hello():
@@ -73,7 +75,8 @@ def hello():
     #var_2 = flask.request.args.get('var_2', "not set")
     
     
-    #querying for messages
+    #querying database for messages
+    ########################################################################################################
     recent = models.db.session.query(models.MessageTable).order_by(models.MessageTable.id.desc()).limit(100)
     for row in recent.from_self().order_by(models.MessageTable.id):
         print "FROM MESSAGE TABLE "+str(row.message)
@@ -89,6 +92,8 @@ def hello():
     #print var_1
     return flask.render_template('index.html')
 
+##SOCKETS
+#############################################################################
 @socketio.on('connect')
 def on_connect():
     print request.sid #gets sid
@@ -100,8 +105,6 @@ def on_connect():
             'name': "muahahah",
         })
         """
-    
-    
 
 @socketio.on('disconnect')
 def on_disconnect():
@@ -111,13 +114,6 @@ def on_disconnect():
             'name': "a user",
         }, broadcast=True)
     
-    
-    
-all_numbers = []
-all_users = []
-all_messages = []
-all_sources = []
-all_userPictures = []
 
 #gets a new message from the client and broadcasts it
 @socketio.on('send:message:server')
@@ -233,15 +229,13 @@ def on_chatbot(data):
         }, broadcast = False)
             return
         
+        #gets lat and long based on address
         location = geolocator.geocode(address)
-        #"175 5th Avenue NYC"
-        #print(location.address)
-        #Flatiron Building, 175, 5th Avenue, Flatiron, New York, NYC, New York, ...
-        #print((location.latitude, location.longitude))
         
         lat = location.latitude
         lng = location.longitude
         
+        #gets forecast based on latitude and longitude
         forecast = forecastio.load_forecast(api_key, lat, lng)
         
         #print "CURRENT FORECAST"
@@ -250,7 +244,6 @@ def on_chatbot(data):
         msg = address+": "+weather[len('ForecastioDataPoint instance: '):len(weather)]+" UTC"
         #print (msg)
                 
-        #print(response)
         socketio.emit('send:message:client', {
             'user': "RONBOT",
             'text': msg,
@@ -265,12 +258,6 @@ def on_chatbot(data):
             'src' : ""
         }, broadcast = False)
         
-    # Get a response for some unexpected input
-    #response = bot.get_response("are you ok")
-    #print(response)
-    
-    
-    
 """    
 @socketio.on('new number')
 def on_new_number(data):
@@ -328,4 +315,3 @@ if __name__ == '__main__': # __name__!
         port=int(os.getenv('PORT', 8080)),
         debug=True
     )
-
