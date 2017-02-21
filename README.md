@@ -1,44 +1,12 @@
-# Based on lecture6-thuhe :D
+# ChatApp
 
-Some starter code for React on Flask.
+##Theme
+For this project I went with a technological theme given that it involves a chatbot that learns from the messages entered on the chat.
+The theme was implemented by adding a robot picture to a background that lightly resembles tech.
 
-## Upgrade Node version to 6
+##Known problems
+One of the biggest problems was the inability to properly detect when a user disconnects. The app does not register properly when a client leaves.
+Also, the facebook and sign in buttons will retrieve the user's previous login information which can be treated as an auto-login feature after the user signed in once.
 
-```$ nvm install 6```
-
-## Installing Webpack
-
-```$ npm install -g webpack```
-
-## Installing `npm` dependencies from `package.json`
-
-```$ npm install```
-
-## Compiling Javascript using Webpack
-
-```$ webpack --watch```
-
-(The program should not stop running. Leave it running.)
-
-## Edit a JS file
-
-Make a change to `scripts/Content.js`. Webpack should detect the change and 
-print a bunch of stuff.
-
-**Do not manually edit `static/script.js`!!**
-
-## Add new JS files
-
-Stuff that is added to `scripts/` and referenced somewhere else will 
-automatically be packaged into `static/script.js`.
-
-## Running the web server
-
-Click on the green button on `app.py`, or open up a new terminal and type:
-
-```$ python app.py```
-
-## Confused?
-
-I'll explain what all this does in a bit. For now, use it as a starter to
-write some React code.
+##How to improve
+Detect the bug that does nto allow the server to notice on time when a user disconnects
