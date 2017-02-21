@@ -10,6 +10,10 @@ import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login';
 
 
+
+//to hide the app
+document.getElementById('chatApp').hidden = true;
+
 const responseFacebook = (response) => {
   console.log("response from fb"+response);
   
@@ -28,6 +32,9 @@ const responseFacebook = (response) => {
             'source': "facebook",
             'src': userPic,
         });
+    
+    //to show the app
+    document.getElementById('chatApp').hidden = false;
 }
 
 const responseGoogle = (response) => {
@@ -46,6 +53,9 @@ const responseGoogle = (response) => {
             'source': "google",
             'src': userPic,
         });
+        
+  //to show the app
+  document.getElementById('chatApp').hidden =false;
 }
 
 const failureGoogle = (response) => {

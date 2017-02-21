@@ -6,6 +6,12 @@
     <meta name="google-signin-client_id" content="192807312085-9jk4t8hnf02gcb6bekmsu73h5td0reap.apps.googleusercontent.com">
     
     <script src="https://www.gstatic.com/firebasejs/3.6.9/firebase.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+    <script>
+
+function showButtons () { $('#b1, #b2, #b3').show(); }
+
+</script>
 <script>
   // Initialize Firebase
   var config = {
@@ -17,8 +23,15 @@
   };
   firebase.initializeApp(config);
 </script>
-        
- <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+
+<style type="text/css">
+    #b1 {
+    display: none;
+}
+
+</style>
+
+ <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" id = "b1"></div>
 
     </head>
     
