@@ -122,18 +122,102 @@ def on_disconnect():
 #gets a new message from the client and broadcasts it
 @socketio.on('send:message:server')
 def on_server_message(data):
-    socketio.emit('send:message:client', data, broadcast=True, include_self=False)
     
-    message = models.MessageTable(data['user'], data['src'], data['text'])
+    
+    socketio.emit('send:message:client', data, broadcast=True, include_self=True)
+    
+    botTrigger = "!!"
+    
+    aUser = data['user']
+    msg = data['text']
+    aSrc = data['src']
+    
+    ##create new message
+    message = models.MessageTable(str(aUser), str(aSrc), str(msg))
     models.db.session.add(message)
     models.db.session.commit()
     
+    
+    ##trigger bot
+    if botTrigger in data['text']:
+        print "bot triggered"
+        aUser = "RONBOT"
+        if '!!' not in data['text']:
+            msg = "can't recognize that command fam"
+            
+        if '!! about' in data['text']:
+            msg = "This webapp is a chatroom"
+        
+        elif '!! help' in data['text']:
+            msg = "type '!! about' '!! help', '!! say <something>', '!! bot <chat with the bot>', '!! potato' "
+            
+        elif '!! say' in data['text']:
+            msg = "someone told me to say "+(data[len('!! say '):len(data)])
+    
+        #chat with the bot
+        elif '!! bot' in data['text']:
+            theText = str(data['text'])
+            msg = bot.get_response((theText[len('!! bot '):len(theText)]))
+            print str("__"+(theText[len('!! bot '):len(theText)])+"__")
+            
+        elif '!! potato' in data['text']:
+            # Get a response for some unexpected input
+            msg = "potatos are delicious"
+            
+        elif '!! weather' in data['text']:
+            theText = data['text']
+            address = (theText[len('!! weather'):len(theText)])
+            
+            #checks that there is an address, if not let the user know
+            if len(address) == 0:
+                msg = "need to provide city or address"
+                
+            else:
+                #gets lat and long based on address
+                location = geolocator.geocode(address)
+                
+                lat = location.latitude
+                lng = location.longitude
+                
+                #gets forecast based on latitude and longitude
+                forecast = forecastio.load_forecast(api_key, lat, lng)
+                
+                #print "CURRENT FORECAST"
+                
+                weather = str(forecast.currently())
+                msg = address+": "+weather[len('ForecastioDataPoint instance: '):len(weather)]+" UTC"
+    
+    
+    
+    """
     recent = models.db.session.query(models.MessageTable).order_by(models.MessageTable.id.desc()).limit(100)
     for row in recent.from_self().order_by(models.MessageTable.id):
         print "FROM MESSAGE TABLE "+str(row.message)+str(row.user)+str(row.src)
+    """
     
-    #train chatbot
-    bot.train(data['text'])
+    isItRonbot = False
+    
+    if "RONBOT" in str(aUser):
+        isItRonbot = True
+        
+        ## add response to db
+        message = models.MessageTable(str(aUser), str(aSrc), str(msg))
+        models.db.session.add(message)
+        models.db.session.commit()
+    
+    else:
+        #train chatbot
+        bot.train(data['text'])
+        
+        
+    
+    socketio.emit('send:message:client', {
+        'user': str(aUser),
+        'text': str(msg),
+        'src' : str(aSrc)
+    }, broadcast = True, include_self=isItRonbot)
+        
+    
 
 #gets the user that just joined and sends them to the client
 @socketio.on('local:user:login')
@@ -179,53 +263,84 @@ def user_disconnect():
     print "a client left"
 
 
-@socketio.on('chatbot:message')
+#@socketio.on('chatbot:message')
 def on_chatbot(data):
+    msg = "huh?"
+    
+
+    if '!!' not in data:
+        msg = "can't recognize that command fam"
+        """
+        socketio.emit('send:message:client', {
+            'user': "RONBOT",
+            'text': msg,
+            'src' : ""
+        }, broadcast = False)
+        """
+        newMsg = {}
+        newMsg =  {
+                'user': "RONBOT",
+                'text': msg,
+                'src' : ""
+            }
+        return newMsg
     if '!! about' in data:
-        botmsg = "This webapp is a chatroom"
+        msg = "This webapp is a chatroom"
+        """
         socketio.emit('send:message:client', {
             'user': "RONBOT",
             'text': botmsg,
             'src' : ""
         }, broadcast = True)
+        """
         
     elif '!! help' in data:
-        botmsg = "type '!! about' '!! help', '!! say <something>', '!! bot <chat with the bot>', '!! potato' "
+        msg = "type '!! about' '!! help', '!! say <something>', '!! bot <chat with the bot>', '!! potato' "
+        """
         socketio.emit('send:message:client', {
             'user': "RONBOT",
             'text': botmsg,
             'src' : ""
         }, broadcast = True)
+        """
     
     elif '!! say' in data:
-        botmsg = "someone told me to say "+(data[len('!! say '):len(data)])
+        msg = "someone told me to say "+(data[len('!! say '):len(data)])
+        """
         socketio.emit('send:message:client', {
             'user': "RONBOT",
             'text': botmsg,
             'src' : ""
         }, broadcast = True)
+        """
     
     #chat with the bot
     elif '!! bot' in data:
         # Get a response for some unexpected input
         response = bot.get_response((data[len('!! bot '):len(data)]))
         print str("__"+(data[len('!! bot '):len(data)])+"__")
+        
+        msg = response
         #print(response)
+        """
         socketio.emit('send:message:client', {
             'user': "RONBOT",
             'text': str(response),
             'src' : ""
         }, broadcast = False)
+        """
     
     elif '!! potato' in data:
         # Get a response for some unexpected input
         msg = "potatos are delicious"
         #print(response)
+        """
         socketio.emit('send:message:client', {
             'user': "RONBOT",
             'text': msg,
             'src' : ""
         }, broadcast = True)
+        """
     
     elif '!! weather' in data:
         
@@ -234,12 +349,20 @@ def on_chatbot(data):
         #checks that there is an address, if not let the user know
         if len(address) == 0:
             msg = "need to provide city or address"
+            """
             socketio.emit('send:message:client', {
             'user': "RONBOT",
             'text': msg,
             'src' : ""
         }, broadcast = False)
-            return
+        """
+            newMsg = {}
+            newMsg =  {
+                    'user': "RONBOT",
+                    'text': msg,
+                    'src' : ""
+                }
+            return newMsg
         
         #gets lat and long based on address
         location = geolocator.geocode(address)
@@ -255,20 +378,21 @@ def on_chatbot(data):
         weather = str(forecast.currently())
         msg = address+": "+weather[len('ForecastioDataPoint instance: '):len(weather)]+" UTC"
         #print (msg)
-                
+            
+        """   
         socketio.emit('send:message:client', {
             'user': "RONBOT",
             'text': msg,
             'src' : ""
         }, broadcast = True)
-    
-    else:
-        msg = "can't recognize that command fam"
-        socketio.emit('send:message:client', {
+        """
+    newMsg = {}
+    newMsg =  {
             'user': "RONBOT",
             'text': msg,
             'src' : ""
-        }, broadcast = False)
+        }
+    return newMsg
         
 """    
 @socketio.on('new number')

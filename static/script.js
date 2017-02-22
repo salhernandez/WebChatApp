@@ -13561,23 +13561,38 @@ var ChatApp = React.createClass({
         //var res = message.text.substring(0, 3);
         //determine if the message is for the chatbot or everyone else
 
-        if (message.text.includes("!!")) {
-            console.log("chatbot about initiated");
+        //messages.push(message);
+        //  this.setState({messages});
+        //Socket.emit('send:message', message);
 
-            _Socket.Socket.emit('send:message:self', message);
+        //emits the message to the socket
 
-            _Socket.Socket.emit('chatbot:message', message.text);
-        } else {
+        console.log('New message: ', message);
 
-            messages.push(message);
-            this.setState({ messages: messages });
-            //Socket.emit('send:message', message);
-
-            //emits the message to the socket
-            console.log('New message: ', message);
-
-            _Socket.Socket.emit('send:message:server', message);
+        _Socket.Socket.emit('send:message:server', message);
+        /*
+        if( message.text.includes("!!")){
+          console.log("chatbot about initiated");
+          
+          
+          Socket.emit('send:message:self', message);
+          
+          Socket.emit('chatbot:message', message.text);
         }
+        
+        else{
+          
+          
+          messages.push(message);
+          this.setState({messages});
+          //Socket.emit('send:message', message);
+          
+          //emits the message to the socket
+          console.log('New message: ', message);
+          
+          Socket.emit('send:message:server', message);
+        }
+        */
     },
     handleChangeName: function handleChangeName(newName) {
         var _this = this;

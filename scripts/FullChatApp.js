@@ -281,6 +281,16 @@ var ChatApp = React.createClass({
       
       //var res = message.text.substring(0, 3);
       //determine if the message is for the chatbot or everyone else
+      
+      //messages.push(message);
+      //  this.setState({messages});
+        //Socket.emit('send:message', message);
+        
+        //emits the message to the socket
+        console.log('New message: ', message);
+        
+        Socket.emit('send:message:server', message);
+      /*
       if( message.text.includes("!!")){
         console.log("chatbot about initiated");
         
@@ -302,6 +312,7 @@ var ChatApp = React.createClass({
         
         Socket.emit('send:message:server', message);
       }
+      */
   },
 
   handleChangeName(newName) {
