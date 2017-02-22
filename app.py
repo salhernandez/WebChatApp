@@ -11,7 +11,9 @@ import flask_sqlalchemy
 geolocator = Nominatim()
 
 #darksky
-api_key = "6c48b0b26ed6bc18d09c8d6e62e10b27"
+api_key = os.getenv('DARK_SKY')
+
+#api_key = '6c48b0b26ed6bc18d09c8d6e62e10b27'
 
 app = flask.Flask(__name__)
 
