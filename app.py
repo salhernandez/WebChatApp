@@ -142,9 +142,7 @@ def on_server_message(data):
     if botTrigger in data['text']:
         print "bot triggered"
         aUser = "RONBOT"
-        if '!!' not in data['text']:
-            msg = "can't recognize that command fam"
-            
+        
         if '!! about' in data['text']:
             msg = "This webapp is a chatroom"
         
@@ -186,6 +184,8 @@ def on_server_message(data):
                 
                 weather = str(forecast.currently())
                 msg = address+": "+weather[len('ForecastioDataPoint instance: '):len(weather)]+" UTC"
+        else:
+            msg = "can't recognize that command fam"
     
     
     
