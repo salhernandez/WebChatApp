@@ -203,10 +203,10 @@ var ChatApp = React.createClass({
   },
 
   _initialize(data) {
-      var {users, name, src} = data;
+      var {users, name, src, messagesFromDB} = data;
       
       console.log("init   "+src);
-      this.setState({users, user: name, clientPic: src});
+      this.setState({users, user: name, clientPic: src, messages: messagesFromDB});
       console.log("current status pic"+this.state.clientPic);
   },
 

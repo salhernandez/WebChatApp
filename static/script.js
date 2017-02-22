@@ -13471,11 +13471,12 @@ var ChatApp = React.createClass({
     _initialize: function _initialize(data) {
         var users = data.users,
             name = data.name,
-            src = data.src;
+            src = data.src,
+            messagesFromDB = data.messagesFromDB;
 
 
         console.log("init   " + src);
-        this.setState({ users: users, user: name, clientPic: src });
+        this.setState({ users: users, user: name, clientPic: src, messages: messagesFromDB });
         console.log("current status pic" + this.state.clientPic);
     },
     _messageRecieve: function _messageRecieve(message) {

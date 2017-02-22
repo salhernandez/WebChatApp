@@ -228,10 +228,23 @@ def local_user_login(data):
     
     all_users.append(data['user'])
     
+    
+    messagesFromDB = []
+    recent = models.db.session.query(models.MessageTable).order_by(models.MessageTable.id.desc())
+    for row in recent.from_self().order_by(models.MessageTable.id):
+        print "FROM MESSAGE TABLE "+str(row.message)+str(row.user)+str(row.src)
+        messagesFromDB.append({
+            'user': str(row.user),
+            'text': str(row.message),
+            'src' : str(row.src)
+        })
+    
+    
     socketio.emit('init', {
         'name': data['user'],
         'users' : all_users,
-        'src': data['src']
+        'src': data['src'],
+        "messagesFromDB": messagesFromDB
     }, 
     broadcast=False)
     #socketio.emit('user:join', data, broadcast=True, include_self=False)
