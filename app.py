@@ -23,7 +23,9 @@ socketio = flask_socketio.SocketIO(app)
 
 # URI scheme: postgresql://<username>:<password>@<hostname>:<port>/<database-name>
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://potato:potatosareawesome@localhost/postgres'
-#db = flask_sqlalchemy.SQLAlchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+
+db = flask_sqlalchemy.SQLAlchemy(app)
 
 #db = flask_sqlalchemy.SQLAlchemy(app)
 
@@ -119,6 +121,14 @@ def on_disconnect():
 @socketio.on('send:message:server')
 def on_server_message(data):
     socketio.emit('send:message:client', data, broadcast=True, include_self=False)
+    
+    message = models.MessageTable(data['user'], data['src'], data['text'])
+    models.db.session.add(message)
+    models.db.session.commit()
+    
+    recent = models.db.session.query(models.MessageTable).order_by(models.MessageTable.id.desc()).limit(100)
+    for row in recent.from_self().order_by(models.MessageTable.id):
+        print "FROM MESSAGE TABLE "+str(row.message)+str(row.user)+str(row.src)
     
     #train chatbot
     bot.train(data['text'])
@@ -315,3 +325,4 @@ if __name__ == '__main__': # __name__!
         port=int(os.getenv('PORT', 8080)),
         debug=True
     )
+
