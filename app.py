@@ -124,7 +124,7 @@ def on_disconnect():
 def on_server_message(data):
     
     
-    socketio.emit('send:message:client', data, broadcast=True, include_self=True)
+    socketio.emit('send:message:client', data, broadcast=True, include_self=False)
     
     botTrigger = "!!"
     
