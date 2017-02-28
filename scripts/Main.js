@@ -35,6 +35,10 @@ const responseFacebook = (response) => {
     
     //to show the app
     document.getElementById('chatApp').hidden = false;
+    
+    //hide the login buttons
+  document.getElementById('googleButton').hidden =true;
+  document.getElementById('facebookButton').hidden =true;
 }
 
 const responseGoogle = (response) => {
@@ -56,6 +60,12 @@ const responseGoogle = (response) => {
         
   //to show the app
   document.getElementById('chatApp').hidden =false;
+  
+  //hide the login buttons
+  document.getElementById('googleButton').hidden =true;
+  document.getElementById('facebookButton').hidden =true;
+  
+  
 }
 
 const failureGoogle = (response) => {

@@ -31018,6 +31018,10 @@ var responseFacebook = function responseFacebook(response) {
 
   //to show the app
   document.getElementById('chatApp').hidden = false;
+
+  //hide the login buttons
+  document.getElementById('googleButton').hidden = true;
+  document.getElementById('facebookButton').hidden = true;
 };
 
 var responseGoogle = function responseGoogle(response) {
@@ -31039,6 +31043,10 @@ var responseGoogle = function responseGoogle(response) {
 
   //to show the app
   document.getElementById('chatApp').hidden = false;
+
+  //hide the login buttons
+  document.getElementById('googleButton').hidden = true;
+  document.getElementById('facebookButton').hidden = true;
 };
 
 var failureGoogle = function failureGoogle(response) {
