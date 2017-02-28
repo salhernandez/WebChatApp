@@ -83,13 +83,15 @@ def hello():
     ########################################################################################################
     recent = models.db.session.query(models.MessageTable).order_by(models.MessageTable.id.desc()).limit(100)
     for row in recent.from_self().order_by(models.MessageTable.id):
-        print "FROM MESSAGE TABLE "+str(row.message)
+        #print "FROM MESSAGE TABLE "+str(row.message)
+        pass
     #all_messages.append({'message':row.message,'name':row.name,'picture':row.picture})
     
     #querying for users
     recent = models.db.session.query(models.UserTable).order_by(models.UserTable.id.desc()).limit(100)
     for row in recent.from_self().order_by(models.UserTable.id):
-        print "FROM USER TABLE "+str(row.user) +" "+str(row.src) 
+        #print "FROM USER TABLE "+str(row.user) +" "+str(row.src)
+        pass
     #all_messages.append({'message':row.message,'name':row.name,'picture':row.picture})
     
     
@@ -124,7 +126,7 @@ def on_disconnect():
 def on_server_message(data):
     
     
-    socketio.emit('send:message:client', data, broadcast=True, include_self=False)
+    socketio.emit('send:message:client', data, broadcast=True, include_self=True)
     
     botTrigger = "!!"
     
@@ -150,7 +152,8 @@ def on_server_message(data):
             msg = "type '!! about' '!! help', '!! say <something>', '!! bot <chat with the bot>', '!! potato' "
             
         elif '!! say' in data['text']:
-            msg = "someone told me to say "+(data[len('!! say '):len(data)])
+            theText = str(data['text'])
+            msg = "someone told me to say "+str(theText[len('!! say '):len(theText)])
     
         #chat with the bot
         elif '!! bot' in data['text']:
@@ -232,7 +235,8 @@ def local_user_login(data):
     messagesFromDB = []
     recent = models.db.session.query(models.MessageTable).order_by(models.MessageTable.id.desc())
     for row in recent.from_self().order_by(models.MessageTable.id):
-        print "FROM MESSAGE TABLE "+str(row.message)+str(row.user)+str(row.src)
+        #print "FROM MESSAGE TABLE "+str(row.message)+str(row.user)+str(row.src)
+        pass
         messagesFromDB.append({
             'user': str(row.user),
             'text': str(row.message),
