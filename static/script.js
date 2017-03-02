@@ -13302,6 +13302,37 @@ var UsersList = React.createClass({
 var Message = React.createClass({
     displayName: 'Message',
     render: function render() {
+        var msg = this.props.text;
+
+        //converts to lowercase to catch the image extensions
+        var msgLower = msg.toLowerCase();
+        var endMessage;
+        var linkCheck = false;
+        var jpgCheck = false;
+        var jpegCheck = false;
+        var pngCheck = false;
+        var gifCheck = false;
+
+        //checks if the message has http or https
+        if (msgLower.includes("http://") || msgLower.includes("https://")) {
+            var linkCheck = true;
+            var jpgCheck = msgLower.includes(".jpg");
+            var jpegCheck = msgLower.includes(".jpeg");
+            var pngCheck = msgLower.includes(".png");
+            var gifCheck = msgLower.includes(".gif");
+        }
+
+        //check if the string contained the image extension
+        if (jpgCheck || jpegCheck || pngCheck || gifCheck) {
+            endMessage = React.createElement('img', { src: msg, alt: 'userPic', width: '100px', height: '100px' });
+        } else {
+            if (linkCheck) {
+                endMessage = React.createElement('a', { href: 'https://www.w3.org/MarkUp/1995-archive/Elements/A.html' });
+            } else {
+                endMessage = this.props.text;
+            }
+        }
+
         return React.createElement(
             'div',
             { className: 'message' },
@@ -13315,7 +13346,7 @@ var Message = React.createClass({
             React.createElement(
                 'span',
                 null,
-                this.props.text
+                endMessage
             )
         );
     }

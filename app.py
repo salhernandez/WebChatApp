@@ -126,7 +126,7 @@ def on_disconnect():
 def on_server_message(data):
     
     
-    socketio.emit('send:message:client', data, broadcast=True, include_self=True)
+    #socketio.emit('send:message:client', data, broadcast=True, include_self=True)
     
     botTrigger = "!!"
     
@@ -211,14 +211,12 @@ def on_server_message(data):
     else:
         #train chatbot
         bot.train(data['text'])
-        
-        
     
     socketio.emit('send:message:client', {
         'user': str(aUser),
         'text': str(msg),
         'src' : str(aSrc)
-    }, broadcast = True, include_self=isItRonbot)
+    }, broadcast = True, include_self=True)
         
     
 
