@@ -72,7 +72,7 @@ var Message = React.createClass({
     endMessage = <img src= {msg} alt="userPic" width = "100px" height = "100px" />;
   } else {
     if(linkCheck){
-      endMessage = <a href="https://www.w3.org/MarkUp/1995-archive/Elements/A.html" />;
+      endMessage = <a href={msg}>{msg}</a>;
     }
     else{
       endMessage = this.props.text;

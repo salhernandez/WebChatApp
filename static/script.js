@@ -13327,7 +13327,11 @@ var Message = React.createClass({
             endMessage = React.createElement('img', { src: msg, alt: 'userPic', width: '100px', height: '100px' });
         } else {
             if (linkCheck) {
-                endMessage = React.createElement('a', { href: 'https://www.w3.org/MarkUp/1995-archive/Elements/A.html' });
+                endMessage = React.createElement(
+                    'a',
+                    { href: msg },
+                    msg
+                );
             } else {
                 endMessage = this.props.text;
             }
