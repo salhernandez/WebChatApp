@@ -73,6 +73,58 @@ bot.train([
 all_users = []
 all_messages = []
 
+
+def getBotResponse(someString):
+    if '!! about' in someString:
+        msg = "This webapp is a chatroom"
+    
+    elif '!! help' in someString:
+        msg = "type '!! about' '!! help', '!! say <something>', '!! bot <chat with the bot>', '!! potato' "
+        
+    elif '!! say' in someString:
+        theText = str(someString)
+        msg = "someone told me to say "+str(theText[len('!! say '):len(theText)])
+
+    #chat with the bot
+    elif '!! bot' in someString:
+        theText = str(someString)
+        msg = bot.get_response((theText[len('!! bot '):len(theText)]))
+        print str("__"+(theText[len('!! bot '):len(theText)])+"__")
+        
+    elif '!! potato' in someString:
+        # Get a response for some unexpected input
+        msg = "potatos are delicious"
+        
+    elif '!! weather' in someString:
+        theText = someString
+        address = (theText[len('!! weather'):len(theText)])
+        
+        #checks that there is an address, if not let the user know
+        if len(address) == 0:
+            msg = "need to provide city or address"
+            
+        else:
+            #gets lat and long based on address
+            location = geolocator.geocode(address)
+            
+            lat = location.latitude
+            lng = location.longitude
+            
+            #gets forecast based on latitude and longitude
+            forecast = forecastio.load_forecast(api_key, lat, lng)
+            
+            #print "CURRENT FORECAST"
+            
+            weather = str(forecast.currently())
+            msg = address+": "+weather[len('ForecastioDataPoint instance: '):len(weather)]+" UTC"
+    else:
+        msg = "can't recognize that command fam"
+    
+    return msg
+        
+        
+    
+
 @app.route('/')
 def hello():
     #var_1 = flask.request.args.get('user', "not set")
@@ -125,7 +177,6 @@ def on_disconnect():
 @socketio.on('send:message:server')
 def on_server_message(data):
     
-    
     #socketio.emit('send:message:client', data, broadcast=True, include_self=True)
     
     botTrigger = "!!"
@@ -142,55 +193,8 @@ def on_server_message(data):
     
     ##trigger bot
     if botTrigger in data['text']:
-        print "bot triggered"
         aUser = "RONBOT"
-        
-        if '!! about' in data['text']:
-            msg = "This webapp is a chatroom"
-        
-        elif '!! help' in data['text']:
-            msg = "type '!! about' '!! help', '!! say <something>', '!! bot <chat with the bot>', '!! potato' "
-            
-        elif '!! say' in data['text']:
-            theText = str(data['text'])
-            msg = "someone told me to say "+str(theText[len('!! say '):len(theText)])
-    
-        #chat with the bot
-        elif '!! bot' in data['text']:
-            theText = str(data['text'])
-            msg = bot.get_response((theText[len('!! bot '):len(theText)]))
-            print str("__"+(theText[len('!! bot '):len(theText)])+"__")
-            
-        elif '!! potato' in data['text']:
-            # Get a response for some unexpected input
-            msg = "potatos are delicious"
-            
-        elif '!! weather' in data['text']:
-            theText = data['text']
-            address = (theText[len('!! weather'):len(theText)])
-            
-            #checks that there is an address, if not let the user know
-            if len(address) == 0:
-                msg = "need to provide city or address"
-                
-            else:
-                #gets lat and long based on address
-                location = geolocator.geocode(address)
-                
-                lat = location.latitude
-                lng = location.longitude
-                
-                #gets forecast based on latitude and longitude
-                forecast = forecastio.load_forecast(api_key, lat, lng)
-                
-                #print "CURRENT FORECAST"
-                
-                weather = str(forecast.currently())
-                msg = address+": "+weather[len('ForecastioDataPoint instance: '):len(weather)]+" UTC"
-        else:
-            msg = "can't recognize that command fam"
-    
-    
+        msg = getBotResponse(str(data['text']))
     
     """
     recent = models.db.session.query(models.MessageTable).order_by(models.MessageTable.id.desc()).limit(100)
@@ -202,6 +206,12 @@ def on_server_message(data):
     
     if "RONBOT" in str(aUser):
         isItRonbot = True
+        
+        socketio.emit('send:message:client', {
+        'user': str(data['user']),
+        'text': str(data['text']),
+        'src' : str(data['src'])
+    }, broadcast = True, include_self=True)
         
         ## add response to db
         message = models.MessageTable(str(aUser), str(aSrc), str(msg))

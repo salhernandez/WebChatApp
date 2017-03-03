@@ -49,6 +49,19 @@ var Message = React.createClass({
   render() {
   var msg = this.props.text;
   
+  /* //initial setup to render text and images inline
+  //tokenize text by space
+  var splits = msg.split(" ");
+  
+  //foreach loop
+  splits.forEach(function(entry) {
+    //console.log(entry);
+    
+  });
+  
+  */
+  
+  
   //converts to lowercase to catch the image extensions
   var msgLower = msg.toLowerCase();
   var endMessage;
@@ -69,7 +82,7 @@ var Message = React.createClass({
   
   //check if the string contained the image extension
   if (jpgCheck || jpegCheck || pngCheck || gifCheck) {
-    endMessage = <img src= {msg} alt="userPic" width = "100px" height = "100px" />;
+    endMessage = <img src= {msg} alt="inLinePic" width = "100px" height = "100px" />;
   } else {
     if(linkCheck){
       endMessage = <a href={msg}>{msg}</a>;
