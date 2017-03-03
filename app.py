@@ -7,8 +7,6 @@ from geopy.geocoders import Nominatim
 import forecastio
 import flask_sqlalchemy
 
-import functions
-
 #to get lat and long
 geolocator = Nominatim()
 
@@ -75,6 +73,55 @@ bot.train([
 all_users = []
 all_messages = []
 
+def getBotResponse(someString):
+    if '!! about' in someString:
+        msg = "This webapp is a chatroom"
+        
+    
+    #chat with the bot
+    elif '!! bot' in someString:
+        theText = str(someString)
+        msg = bot.get_response((theText[len('!! bot '):len(theText)]))
+        print str("__"+(theText[len('!! bot '):len(theText)])+"__")
+            
+    elif '!! help' in someString:
+        msg = "type '!! about' '!! help', '!! say <something>', '!! bot <chat with the bot>', '!! potato' "
+        
+    elif '!! say' in someString:
+        theText = str(someString)
+        msg = "someone told me to say "+str(theText[len('!! say '):len(theText)])
+        
+    elif '!! potato' in someString:
+        # Get a response for some unexpected input
+        msg = "potatos are delicious"
+        
+    elif '!! weather' in someString:
+        theText = someString
+        address = (theText[len('!! weather'):len(theText)])
+        
+        #checks that there is an address, if not let the user know
+        if len(address) == 0:
+            msg = "need to provide city or address"
+            
+        else:
+            #gets lat and long based on address
+            location = geolocator.geocode(address)
+            
+            lat = location.latitude
+            lng = location.longitude
+            
+            #gets forecast based on latitude and longitude
+            forecast = forecastio.load_forecast(api_key, lat, lng)
+            
+            #print "CURRENT FORECAST"
+            
+            weather = str(forecast.currently())
+            msg = address+": "+weather[len('ForecastioDataPoint instance: '):len(weather)]+" UTC"
+    else:
+        msg = "can't recognize that command fam"
+    
+    return msg
+
 @app.route('/')
 def hello():
     #var_1 = flask.request.args.get('user', "not set")
@@ -140,17 +187,13 @@ def on_server_message(data):
     models.db.session.add(message)
     models.db.session.commit()
     
+    
+    
+    
     ##trigger bot
     if botTrigger in data['text']:
         aUser = "RONBOT"
-        msg = functions.getBotResponse(str(data['text']))
-        
-        #chat with the bot
-        if '!! bot' in data['text']:
-            theText = str(data['text'])
-            msg = bot.get_response((theText[len('!! bot '):len(theText)]))
-            print str("__"+(theText[len('!! bot '):len(theText)])+"__")
-        
+        msg = getBotResponse(str(data['text']))
     
     """
     recent = models.db.session.query(models.MessageTable).order_by(models.MessageTable.id.desc()).limit(100)
