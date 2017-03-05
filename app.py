@@ -75,7 +75,7 @@ all_messages = []
 
 def getBotResponse(someString):
     if '!! about' in someString:
-        msg = "This webapp is a chatroom"
+        msg = "This web app is an open chatroom"
         
     
     #chat with the bot
@@ -85,7 +85,7 @@ def getBotResponse(someString):
         print str("__"+(theText[len('!! bot '):len(theText)])+"__")
             
     elif '!! help' in someString:
-        msg = "type '!! about' '!! help', '!! say <something>', '!! bot <chat with the bot>', '!! potato' "
+        msg = "type '!! about' '!! help', '!! say <something>', '!! bot <chat with the bot>', '!! potato', '!! weather <city or address>' "
         
     elif '!! say' in someString:
         theText = str(someString)
