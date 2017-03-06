@@ -83,7 +83,7 @@ def getBotResponse(someString):
         print str("__"+(theText[len('!! bot '):len(theText)])+"__")
             
     elif '!! help' in someString:
-        msg = "type '!! about' '!! help', '!! say <something>', '!! bot <chat with the bot>', '!! potato', '!! weather <city or address>' "
+        msg = "type '!! about' '!! help', '!! say <x>', '!! bot <chat>', '!! potato', '!! weather <place>'"
         
     elif '!! say' in someString:
         theText = str(someString)

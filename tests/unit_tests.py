@@ -12,7 +12,7 @@ class ChatBotResponseTest(unittest.TestCase):
         self.assertEquals(response, 'potatos are delicious')
     
     def test_command_help(self):
-        msg = "type '!! about' '!! help', '!! say <something>', '!! bot <chat with the bot>', '!! potato', '!! weather <city or address>' "
+        msg = "type '!! about' '!! help', '!! say <x>', '!! bot <chat>', '!! potato', '!! weather <place>'"
         response = app.getBotResponse('!! help')
         self.assertEquals(response, msg)
     
