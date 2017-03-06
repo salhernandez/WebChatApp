@@ -9,4 +9,10 @@ One of the biggest problems was the inability to properly detect when a user dis
 Also, the facebook and sign in buttons will retrieve the user's previous login information which can be treated as an auto-login feature after the user signed in once.
 
 ##How to improve
-Detect the bug that does nto allow the server to notice on time when a user disconnects
+* Detect the bug that does not allow the server to notice on time when a user disconnects
+* show the correct user images when a user logins, the image displayed will be from the person that connected last
+* Display the right amount of users that are logged in
+
+##Improvements from handin 1
+* page itself should not scroll
+* !! say <something> makes the bot say <something> to the room
