@@ -77,12 +77,12 @@ class SocketIOTestCase(unittest.TestCase):
         self.assertEquals(data['text'],u'some text')
         self.assertEquals(data['src'],u'potato.png')
     
-    #retrieve message sent by bot
-    def test_send_message_server_return_bot(self):
+    #test message when it was not sent by the bot 2
+    def test_send_message_server_2(self):
         client = app.socketio.test_client(app.app)
         message_info = {
-            'user': 'RONBOT',
-            'text': '!! potato',
+            'user': 'josh',
+            'text': 'i like tacos',
             'src' : 'potato.png'
         }
         
@@ -96,8 +96,8 @@ class SocketIOTestCase(unittest.TestCase):
         
         #get package data
         data = response['args'][0]
-        self.assertEquals(data['user'],u'RONBOT')
-        self.assertEquals(data['text'],u'potatos are delicious')
+        self.assertEquals(data['user'],u'josh')
+        self.assertEquals(data['text'],u'i like tacos')
         self.assertEquals(data['src'],u'potato.png')
         
 if __name__ == '__main__':
