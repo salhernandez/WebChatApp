@@ -71,6 +71,7 @@ var Message = React.createClass({
   var pngCheck = false;
   var gifCheck = false;
   
+  //
   //checks if the message has http or https
   if(msgLower.includes("http://") || msgLower.includes("https://")){
     var linkCheck = true;
