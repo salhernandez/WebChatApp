@@ -15,9 +15,14 @@ class ServerIntegrationTestCase(
         self.assertEqual(response.code, 200)
     
     #checks that the page returns something
-    def test_server_sends_hello(self):
+    #def test_server_sends_hello(self):
+    #    r = requests.get(self.get_server_url())
+    #    self.assertGreater(len(r.text), 0)
+    
+    #makes sure that it is an html page
+    def test_getty_images(self):
         r = requests.get(self.get_server_url())
-        self.assertGreater(len(r.text), 0)
+        self.assertIn(r.text[0], "<html>")
     
 if __name__ == '__main__':
     unittest.main()
