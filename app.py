@@ -154,6 +154,10 @@ def on_connect():
     print request.sid #gets sid
     print 'Someone connected!'
     
+    socketio.emit('hello to client', {
+        'message': 'I acknowledge you!'
+    })
+
     """
     socketio.emit('init', {
             'users' : all_users,
@@ -165,10 +169,15 @@ def on_connect():
 def on_disconnect():
     print 'Someone disconnected!'
     
+    
+    #used for the socket io tests
+    socketio.emit('test disconnect', {
+            'name': "potato",
+        }, broadcast=True)
+    
     socketio.emit('user:left', {
             'name': "a user",
         }, broadcast=True)
-    
 
 #gets a new message from the client and broadcasts it
 @socketio.on('send:message:server')
@@ -417,56 +426,9 @@ def on_chatbot(data):
             'src' : ""
         }
     return newMsg
-        
-"""    
-@socketio.on('new number')
-def on_new_number(data):
-    print "Got an event for new number with data:", data
-    # TODO: Fill me out!
-    all_numbers.append(data['number'])
-    
-    print request.sid #gets sid
-    socketio.emit('all numbers', {
-        'numbers': all_numbers
-    })
-    
-@socketio.on('new message')
-def on_new_message(data):
-    print "Got an event for new message with data:", data
-    # TODO: Fill me out!
-    #all_messages.append(data['message'])
-    
-    
-    print request.sid #gets sid
-    #emit new message
-    socketio.emit('all messages', {
-        'messages': all_messages
-    })
 
+#integration tests
 
-@socketio.on('new user')
-def on_new_user(data):
-    print "Got an event for new user with data:", data
-    
-    # TODO: Fill me out!
-    all_users.append(data['user'])
-    all_sources.append(data['source'])
-    all_userPictures.append(data['userPicture'])
-    
-    print request.sid #gets sid
-    
-    #emit new message
-    socketio.emit('all users', {
-        'users': all_users,
-        'sources' : all_sources,
-        'userPictures' : all_userPictures
-    })
-    
-    socketio.emit('init', {
-        'users' : all_users,
-        'name': data['user'],
-    })
-"""
 
 if __name__ == '__main__': # __name__!
     socketio.run(
