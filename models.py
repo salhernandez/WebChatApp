@@ -7,9 +7,9 @@ db = flask_sqlalchemy.SQLAlchemy(app.app)
 
 class MessageTable(db.Model):
     id = db.Column(db.Integer, primary_key=True) # key
-    user = db.Column(db.String(120))
-    src = db.Column(db.String(200))
-    message = db.Column(db.String(120))
+    user = db.Column(db.String(400))
+    src = db.Column(db.String(400))
+    message = db.Column(db.String(400))
     
     def __init__(self, t, u, v):
         self.user = t
@@ -21,8 +21,8 @@ class MessageTable(db.Model):
 
 class UserTable(db.Model):
     id = db.Column(db.Integer, primary_key=True) # key
-    user = db.Column(db.String(120))
-    src = db.Column(db.String(200))
+    user = db.Column(db.String(400))
+    src = db.Column(db.String(400))
     loginSource = db.Column(db.String(20))
     
     def __init__(self, t, u, v):
