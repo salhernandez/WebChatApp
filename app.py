@@ -424,8 +424,9 @@ def on_chatbot(data):
         }
     return newMsg
 
-#integration tests
-
+@app.route('/test_1')
+def test_1():
+    return "hi"
 
 if __name__ == '__main__': # __name__!
     socketio.run(

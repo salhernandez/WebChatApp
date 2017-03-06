@@ -6,3 +6,5 @@ python-forecastio
 psycopg2
 Flask-SQLAlchemy
 rfc3987
+Flask-Testing
+import urllib2
