@@ -82,7 +82,7 @@ class SocketIOTestCase(unittest.TestCase):
         client = app.socketio.test_client(app.app)
         message_info = {
             'user': 'potato',
-            'text': '!! say hello',
+            'text': '!! potato',
             'src' : 'potato.png'
         }
         
@@ -97,7 +97,7 @@ class SocketIOTestCase(unittest.TestCase):
         #get package data
         data = response['args'][0]
         self.assertEquals(data['user'],u'RONBOT')
-        self.assertEquals(data['text'],u'someone told me to say hello')
+        self.assertEquals(data['text'],u'potatos are delicious')
         self.assertEquals(data['src'],u'potato.png')
         
 if __name__ == '__main__':
