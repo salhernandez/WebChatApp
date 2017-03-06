@@ -81,7 +81,7 @@ class SocketIOTestCase(unittest.TestCase):
     def test_send_message_server_return_bot(self):
         client = app.socketio.test_client(app.app)
         message_info = {
-            'user': 'potato',
+            'user': 'RONBOT',
             'text': '!! potato',
             'src' : 'potato.png'
         }
