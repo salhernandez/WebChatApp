@@ -1,0 +1,8 @@
+test:
+    override:
+        - python -m tests/unit_tests
+deployment:
+    production:
+        branch: master
+        heroku:
+            appname: shielded-plains-57748
