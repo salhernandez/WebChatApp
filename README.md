@@ -12,6 +12,7 @@ Also, the facebook and sign in buttons will retrieve the user's previous login i
 * Detect the bug that does not allow the server to notice on time when a user disconnects
 * show the correct user images when a user logins, the image displayed will be from the person that connected last
 * Display the right amount of users that are logged in
+* On Circleci sometimes the tests fails because of the nature of the tests. It will throw the error that the port is already in use.
 
 ##Improvements from handin 1
 * page itself should not scroll
