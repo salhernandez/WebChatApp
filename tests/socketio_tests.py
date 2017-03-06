@@ -76,6 +76,29 @@ class SocketIOTestCase(unittest.TestCase):
         self.assertEquals(data['user'],u'potato')
         self.assertEquals(data['text'],u'some text')
         self.assertEquals(data['src'],u'potato.png')
+    
+    #retrieve message sent by bot
+    def test_send_message_server_return_bot(self):
+        client = app.socketio.test_client(app.app)
+        message_info = {
+            'user': 'potato',
+            'text': '!! say hello',
+            'src' : 'potato.png'
+        }
+        
+        client.emit('send:message:server', message_info)
+        result = client.get_received()
+        
+        response = result[1]
+        
+        #get socket listen
+        self.assertEquals(response['name'],'send:message:client')
+        
+        #get package data
+        data = response['args'][0]
+        self.assertEquals(data['user'],u'RONBOT')
+        self.assertEquals(data['text'],u'someone told me to say hello')
+        self.assertEquals(data['src'],u'potato.png')
         
 if __name__ == '__main__':
  unittest.main()
