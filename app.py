@@ -196,9 +196,6 @@ def on_server_message(data):
     models.db.session.add(message)
     models.db.session.commit()
     
-    
-    
-    
     ##trigger bot
     if botTrigger in data['text']:
         aUser = "RONBOT"
