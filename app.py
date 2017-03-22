@@ -27,9 +27,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 
 db = flask_sqlalchemy.SQLAlchemy(app)
 
-#db = flask_sqlalchemy.SQLAlchemy(app)
-
-
 # Create a new instance of a ChatBot
 bot = ChatBot(
     'Default Response Example Bot',
@@ -122,27 +119,6 @@ def getBotResponse(someString):
 
 @app.route('/')
 def hello():
-    #var_1 = flask.request.args.get('user', "not set")
-    #var_2 = flask.request.args.get('var_2', "not set")
-    
-    
-    #querying database for messages
-    ########################################################################################################
-    recent = models.db.session.query(models.MessageTable).order_by(models.MessageTable.id.desc()).limit(100)
-    for row in recent.from_self().order_by(models.MessageTable.id):
-        #print "FROM MESSAGE TABLE "+str(row.message)
-        pass
-    #all_messages.append({'message':row.message,'name':row.name,'picture':row.picture})
-    
-    #querying for users
-    recent = models.db.session.query(models.UserTable).order_by(models.UserTable.id.desc()).limit(100)
-    for row in recent.from_self().order_by(models.UserTable.id):
-        #print "FROM USER TABLE "+str(row.user) +" "+str(row.src)
-        pass
-    #all_messages.append({'message':row.message,'name':row.name,'picture':row.picture})
-    
-    
-    #print var_1
     return flask.render_template('index.html')
 
 ##SOCKETS
@@ -156,17 +132,9 @@ def on_connect():
         'message': 'I acknowledge you!'
     })
 
-    """
-    socketio.emit('init', {
-            'users' : all_users,
-            'name': "muahahah",
-        })
-        """
-
 @socketio.on('disconnect')
 def on_disconnect():
     print 'Someone disconnected!'
-    
     
     #used for the socket io tests
     socketio.emit('test disconnect', {
@@ -180,8 +148,6 @@ def on_disconnect():
 #gets a new message from the client and broadcasts it
 @socketio.on('send:message:server')
 def on_server_message(data):
-    
-    #socketio.emit('send:message:client', data, broadcast=True, include_self=True)
     
     botTrigger = "!!"
     
@@ -199,17 +165,7 @@ def on_server_message(data):
         aUser = "RONBOT"
         msg = getBotResponse(str(data['text']))
     
-    """
-    recent = models.db.session.query(models.MessageTable).order_by(models.MessageTable.id.desc()).limit(100)
-    for row in recent.from_self().order_by(models.MessageTable.id):
-        print "FROM MESSAGE TABLE "+str(row.message)+str(row.user)+str(row.src)
-    """
-    
-    isItRonbot = False
-    
     if "RONBOT" in str(aUser):
-        isItRonbot = True
-        
         socketio.emit('send:message:client', {
         'user': str(data['user']),
         'text': str(data['text']),
@@ -242,12 +198,9 @@ def local_user_login(data):
     
     all_users.append(data['user'])
     
-    
     messagesFromDB = []
     recent = models.db.session.query(models.MessageTable).order_by(models.MessageTable.id.desc())
     for row in recent.from_self().order_by(models.MessageTable.id):
-        #print "FROM MESSAGE TABLE "+str(row.message)+str(row.user)+str(row.src)
-        pass
         messagesFromDB.append({
             'user': str(row.user),
             'text': str(row.message),
@@ -269,8 +222,6 @@ def local_user_login(data):
             'name': data['user'],
         })
        
-    
-
 @socketio.on('send:message:self')
 def on_self_message(data):
     socketio.emit('send:message:client', data, broadcast=False, include_self=True)
@@ -298,13 +249,6 @@ def on_chatbot(data):
 
     if '!!' not in data:
         msg = "can't recognize that command fam"
-        """
-        socketio.emit('send:message:client', {
-            'user': "RONBOT",
-            'text': msg,
-            'src' : ""
-        }, broadcast = False)
-        """
         newMsg = {}
         newMsg =  {
                 'user': "RONBOT",
@@ -314,33 +258,12 @@ def on_chatbot(data):
         return newMsg
     if '!! about' in data:
         msg = "This webapp is a chatroom"
-        """
-        socketio.emit('send:message:client', {
-            'user': "RONBOT",
-            'text': botmsg,
-            'src' : ""
-        }, broadcast = True)
-        """
         
     elif '!! help' in data:
         msg = "type '!! about' '!! help', '!! say <something>', '!! bot <chat with the bot>', '!! potato' "
-        """
-        socketio.emit('send:message:client', {
-            'user': "RONBOT",
-            'text': botmsg,
-            'src' : ""
-        }, broadcast = True)
-        """
-    
+        
     elif '!! say' in data:
         msg = "someone told me to say "+(data[len('!! say '):len(data)])
-        """
-        socketio.emit('send:message:client', {
-            'user': "RONBOT",
-            'text': botmsg,
-            'src' : ""
-        }, broadcast = True)
-        """
     
     #chat with the bot
     elif '!! bot' in data:
@@ -349,26 +272,10 @@ def on_chatbot(data):
         print str("__"+(data[len('!! bot '):len(data)])+"__")
         
         msg = response
-        #print(response)
-        """
-        socketio.emit('send:message:client', {
-            'user': "RONBOT",
-            'text': str(response),
-            'src' : ""
-        }, broadcast = False)
-        """
     
     elif '!! potato' in data:
         # Get a response for some unexpected input
         msg = "potatos are delicious"
-        #print(response)
-        """
-        socketio.emit('send:message:client', {
-            'user': "RONBOT",
-            'text': msg,
-            'src' : ""
-        }, broadcast = True)
-        """
     
     elif '!! weather' in data:
         
@@ -377,13 +284,6 @@ def on_chatbot(data):
         #checks that there is an address, if not let the user know
         if len(address) == 0:
             msg = "need to provide city or address"
-            """
-            socketio.emit('send:message:client', {
-            'user': "RONBOT",
-            'text': msg,
-            'src' : ""
-        }, broadcast = False)
-        """
             newMsg = {}
             newMsg =  {
                     'user': "RONBOT",
@@ -405,15 +305,7 @@ def on_chatbot(data):
         
         weather = str(forecast.currently())
         msg = address+": "+weather[len('ForecastioDataPoint instance: '):len(weather)]+" UTC"
-        #print (msg)
-            
-        """   
-        socketio.emit('send:message:client', {
-            'user': "RONBOT",
-            'text': msg,
-            'src' : ""
-        }, broadcast = True)
-        """
+        
     newMsg = {}
     newMsg =  {
             'user': "RONBOT",
@@ -421,10 +313,6 @@ def on_chatbot(data):
             'src' : ""
         }
     return newMsg
-
-@app.route('/test_1')
-def test_1():
-    return "hi"
 
 if __name__ == '__main__': # __name__!
     socketio.run(
