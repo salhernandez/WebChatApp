@@ -108,8 +108,6 @@ def getBotResponse(someString):
             #gets forecast based on latitude and longitude
             forecast = forecastio.load_forecast(api_key, lat, lng)
             
-            #print "CURRENT FORECAST"
-            
             weather = str(forecast.currently())
             msg = address+": "+weather[len('ForecastioDataPoint instance: '):len(weather)]+" UTC"
     else:
@@ -207,7 +205,7 @@ def local_user_login(data):
             'src' : str(row.src)
         })
     
-    
+    #on login, inits the info on the client side
     socketio.emit('init', {
         'name': data['user'],
         'users' : all_users,
@@ -215,13 +213,14 @@ def local_user_login(data):
         "messagesFromDB": messagesFromDB
     }, 
     broadcast=False)
-    #socketio.emit('user:join', data, broadcast=True, include_self=False)
-
+    
+    #send users data to the client
     socketio.emit('user:join', {
             'users' : all_users,
             'name': data['user'],
         })
-       
+
+
 @socketio.on('send:message:self')
 def on_self_message(data):
     socketio.emit('send:message:client', data, broadcast=False, include_self=True)
@@ -241,12 +240,9 @@ def server_user_join(data):
 def user_disconnect():
     print "a client left"
 
-
-#@socketio.on('chatbot:message')
 def on_chatbot(data):
     msg = "huh?"
     
-
     if '!!' not in data:
         msg = "can't recognize that command fam"
         newMsg = {}
@@ -300,8 +296,6 @@ def on_chatbot(data):
         
         #gets forecast based on latitude and longitude
         forecast = forecastio.load_forecast(api_key, lat, lng)
-        
-        #print "CURRENT FORECAST"
         
         weather = str(forecast.currently())
         msg = address+": "+weather[len('ForecastioDataPoint instance: '):len(weather)]+" UTC"
